@@ -1,0 +1,24 @@
+PRIOR AUTHORIZATION — FAX COVER
+From: {your_name}, {your_role}, CRC
+Phone: {your_phone}   Fax: {your_fax}
+Date/Time: {now}
+
+Payer: {payer}   Plan: {plan}
+Patient: {last}, {first}  DOB: {dob}  MRN: {mrn}  Visit: {visit_id}
+Service: ASAM {asam} at {facility}
+Reason for request: {short_reason}
+
+Included documents (check):
+  [ ] Core Clinical Summary     [ ] ASAM/LOC Summary
+  [ ] Medication List           [ ] Last MOUD Dose
+  [ ] Vitals (24h)              [ ] Labs (non-sensitive)
+  [ ] SUD Labs*                 [ ] 302 Docs*     [ ] ROI*
+    *Share only per policy/consent (42 CFR Part 2).
+
+Callback number for UM nurse: {callback}
+Reference/Ticket (if known): {ticket}
+
+Notes to payer (brief):
+{notes}
+
+This cover sheet contains protected health information (PHI).

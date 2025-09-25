@@ -1,0 +1,30 @@
+Field,Type,Required?,Enum/Set,Description,Steward
+FACILITY_ID,Code,Y,,Unique identifier,Directory Steward
+NAME,Text,Y,,Facility name,Directory Steward
+PHONE,Text,Y,,Main phone,Directory Steward
+CONTACT,Text,N,,Preferred contact for transfers,Directory Steward
+ASAM_LEVELS_AVAILABLE,Text,Y,,"Comma-separated list of ASAM levels (e.g., 1.0,3.1,3.7)",Directory Steward
+ASAM_0_5,Enum,N,Y|N,Supports ASAM 0.5,Directory Steward
+ASAM_1_0,Enum,N,Y|N,Supports ASAM 1.0,Directory Steward
+ASAM_2_1,Enum,N,Y|N,Supports ASAM 2.1,Directory Steward
+ASAM_2_5,Enum,N,Y|N,Supports ASAM 2.5,Directory Steward
+ASAM_3_1,Enum,N,Y|N,Supports ASAM 3.1,Directory Steward
+ASAM_3_7,Enum,N,Y|N,Supports ASAM 3.7,Directory Steward
+ASAM_4_0,Enum,N,Y|N,Supports ASAM 4.0,Directory Steward
+ACUTE_MEDICAL_STABILIZATION,Enum,Y,Y|N,Can manage acute medical stabilization,Directory Steward
+ACUTE_BEHAVIORAL_HEALTH,Enum,Y,Y|N,Can manage acute behavioral health crises,Directory Steward
+SECURE_BEHAVIORAL_CAPABLE,Enum,N,Y|N,Secure/ligature-resistant behavioral capability,Directory Steward
+DUAL_DIAGNOSIS_CAPABLE,Enum,Y,Y|N,Dual-capable (SUD+SMI),Directory Steward
+BH_MED_INITIATION,Enum,Y,Y|N,Can initiate BH meds,Directory Steward
+TAKES_302,Enum,Y,Y|N,Accepts 302 (involuntary),Directory Steward
+SECURE_DETOX_CAPABLE,Enum,N,Y|N,Secure/involuntary capable detox,Directory Steward
+MEDICAL_ACUITY_CAPABILITY,Enum,Y,Low|Moderate|High,Medical acuity capability,Directory Steward
+ASAM_CAPACITY_ESTIMATE,Enum,N,InductionOnly|MaintenanceOnly|DetoxOnly|AllLevels,High-level capacity nuance,Directory Steward
+BED_STATUS,Enum,N,Open|Waitlist|Hold|Unknown,Current bed status (if known),Directory Steward
+BED_STATUS_TS,TS,N,,Timestamp of last bed status update,Directory Steward
+LAST_VERIFIED_TS,TS,Y,,Last verification timestamp,Directory Steward
+VERIFIED_BY_USER_ID,User,Y,,User who verified,Directory Steward
+VERIFICATION_METHOD,Enum,N,Call|Portal|Interface|Other,How verification was performed,Directory Steward
+TRANSFER_INSTRUCTIONS,Text,N,,Any special instructions,Directory Steward
+PAYER_PLAN_MATRIX,Complex,N,,"{{PAYER_ID, PLAN_ID, IN_NETWORK(Y/N), NOTES, EFFECTIVE_FROM, EFFECTIVE_TO}}",Rev Cycle/Steward
+ASAM_LEVEL_ACCEPTED_NOTE,Text,N,,Nuance notes for ASAM acceptance,Directory Steward
