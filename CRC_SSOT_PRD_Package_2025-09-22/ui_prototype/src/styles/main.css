@@ -1394,6 +1394,175 @@ textarea {
   justify-content: space-between;
 }
 
+/* Transport Scheduling Modal */
+.transport-modal {
+  background: var(--surface);
+  border-radius: 16px;
+  width: min(600px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.transport-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.transport-modal .modal-header h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.transport-modal .modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.transport-modal .modal-close:hover {
+  background: var(--background);
+  color: var(--text);
+}
+
+.transport-form {
+  padding: 0 24px 24px 24px;
+}
+
+.transport-form .form-section {
+  display: grid;
+  gap: 20px;
+}
+
+.transport-form .form-group {
+  display: grid;
+  gap: 6px;
+}
+
+.transport-form .form-group.required label::after {
+  content: ' *';
+  color: #ef4444;
+}
+
+.transport-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.transport-form label {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.transport-form input,
+.transport-form select {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.transport-form input:focus,
+.transport-form select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.transport-form input[readonly] {
+  background: var(--background);
+  color: var(--text-muted);
+}
+
+.transport-form small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.transport-form .checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.transport-form .checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.transport-form .checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.transport-form .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.transport-form .btn-primary,
+.transport-form .btn-secondary {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.transport-form .btn-primary {
+  background: var(--accent);
+  color: white;
+  border: 1px solid var(--accent);
+}
+
+.transport-form .btn-primary:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.transport-form .btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.transport-form .btn-secondary:hover {
+  background: var(--background);
+}
+
+@media (max-width: 640px) {
+  .transport-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 1180px) {
   .workspace {
     grid-template-columns: 1fr;

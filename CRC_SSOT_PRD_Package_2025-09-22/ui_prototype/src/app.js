@@ -1150,6 +1150,171 @@ function loadStoredPanelVisibility() {
     }
   }
 
+  function showTransportScheduleModal(search, searchId) {
+    // Create modal HTML
+    const modalHTML = `
+      <div id="transportModal" class="modal-overlay">
+        <div class="modal-content transport-modal">
+          <div class="modal-header">
+            <h3>Schedule Transport - ${search.facilityName}</h3>
+            <button class="modal-close" onclick="closeTransportModal()">×</button>
+          </div>
+          <form id="transportForm" class="transport-form">
+            <div class="form-section">
+              <div class="form-group required">
+                <label for="pickupAt">Pickup Time *</label>
+                <input 
+                  type="datetime-local" 
+                  id="pickupAt" 
+                  name="pickup_at" 
+                  required
+                  min="${new Date(Date.now() - 10 * 60000).toISOString().slice(0, 16)}"
+                />
+                <small>Must be at least 10 minutes from now</small>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="vendorName">Transport Vendor</label>
+                  <input 
+                    type="text" 
+                    id="vendorName" 
+                    name="vendor_name" 
+                    placeholder="e.g., AmeriTran EMS"
+                  />
+                </div>
+                
+                <div class="form-group">
+                  <label for="transportMode">Transport Mode</label>
+                  <select id="transportMode" name="mode">
+                    <option value="">Select mode</option>
+                    <option value="ambulance">Ambulance</option>
+                    <option value="wheelchair_van">Wheelchair Van</option>
+                    <option value="BLS">BLS (Basic Life Support)</option>
+                    <option value="ALS">ALS (Advanced Life Support)</option>
+                    <option value="rideshare_nonclinical">Rideshare (Non-clinical)</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="pickupLocation">Pickup Location</label>
+                <input 
+                  type="text" 
+                  id="pickupLocation" 
+                  name="pickup_location" 
+                  placeholder="e.g., Einstein Main – CRC"
+                />
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="destinationFacility">Destination Facility</label>
+                  <input 
+                    type="text" 
+                    id="destinationFacility" 
+                    name="destination_facility" 
+                    value="${search.facilityName}" 
+                    readonly
+                  />
+                  <input type="hidden" name="destination_facility_id" value="${search.facilityId || search.id}">
+                </div>
+                
+                <div class="form-group checkbox-group">
+                  <label>
+                    <input type="checkbox" id="escortRequired" name="escort_required">
+                    <span class="checkmark"></span>
+                    Escort Required
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="transportRequestId">External Request ID</label>
+                <input 
+                  type="text" 
+                  id="transportRequestId" 
+                  name="transport_request_id" 
+                  placeholder="EMR/dispatcher reference ID"
+                />
+              </div>
+            </div>
+            
+            <div class="modal-actions">
+              <button type="button" class="btn-secondary" onclick="closeTransportModal()">Cancel</button>
+              <button type="submit" class="btn-primary">Schedule Transport</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+
+    // Add modal to DOM
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Add form submit handler
+    document.getElementById('transportForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleTransportFormSubmit(search, searchId);
+    });
+
+    // Focus first field
+    document.getElementById('pickupAt').focus();
+  }
+
+  function closeTransportModal() {
+    const modal = document.getElementById('transportModal');
+    if (modal) modal.remove();
+  }
+
+  function handleTransportFormSubmit(search, _searchId) {
+    const form = document.getElementById('transportForm');
+    const formData = new FormData(form);
+    
+    // Validate pickup time
+    const pickupAt = new Date(formData.get('pickup_at'));
+    const minTime = new Date(Date.now() - 10 * 60000); // 10 minutes ago
+    
+    if (pickupAt <= minTime) {
+      showToast('Pickup time must be at least 10 minutes from now', 'error');
+      return;
+    }
+
+    // Build payload
+    const payload = {
+      pickup_at: pickupAt.toISOString()
+    };
+
+    // Add optional fields if provided
+    if (formData.get('vendor_name')) payload.vendor_name = formData.get('vendor_name');
+    if (formData.get('mode')) payload.mode = formData.get('mode');
+    if (formData.get('pickup_location')) payload.pickup_location = formData.get('pickup_location');
+    if (formData.get('destination_facility_id')) payload.destination_facility_id = parseInt(formData.get('destination_facility_id'));
+    if (formData.get('escort_required') === 'on') payload.escort_required = true;
+    if (formData.get('transport_request_id')) payload.transport_request_id = formData.get('transport_request_id');
+
+    // Add the event
+    addSearchEvent(search, 'transport_scheduled', payload, 'current_user');
+    
+    // Update patient searchHistory for backwards compatibility
+    const patient = getCurrentPatient();
+    if (patient) {
+      if (!patient.searchHistory) patient.searchHistory = [];
+      patient.searchHistory.unshift({
+        ts: search.updated,
+        status: search.status, 
+        facility: search.facilityName,
+        detail: formatEventDetail(search.events[search.events.length - 1])
+      });
+
+      // Re-render the search list
+      renderActiveSearches(patient);
+    }
+    
+    closeTransportModal();
+    showToast(`Transport scheduled for ${formatTimestamp(pickupAt)}`);
+  }
+
   function showAddEventModal(searchId) {
     const patient = getCurrentPatient();
     if (!patient) return;
@@ -1188,8 +1353,8 @@ Enter event type:`);
       const holdUntil = window.prompt('Hold until (optional):');
       if (holdUntil) payload.hold_until = holdUntil;
     } else if (eventType === 'transport_scheduled') {
-      const pickupAt = window.prompt('Pickup time:');
-      if (pickupAt) payload.pickup_at = pickupAt;
+      showTransportScheduleModal(search, searchId);
+      return; // Exit early since we're showing a custom modal
     } else if (eventType === 'note') {
       const text = window.prompt('Note text:');
       if (text) payload.text = text;
