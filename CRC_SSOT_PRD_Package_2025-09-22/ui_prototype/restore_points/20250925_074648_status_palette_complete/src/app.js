@@ -960,7 +960,6 @@ function loadStoredPanelVisibility() {
               <div class="search-facility">${search.facilityName}</div>
               <span class="status-badge" style="${badgeStyle}">${status.icon ? `${status.icon} ` : ''}${status.label}</span>
             </div>
-            ${renderActionTagsBadges(search)}
             <div class="search-meta">
               <span>Updated: ${search.updated}</span>
               <span>Channels: ${channels}</span>
@@ -2535,10 +2534,6 @@ Enter event type:`);
     if (dom.popoverSummary) {
       dom.popoverSummary.value = search.summary || '';
     }
-    
-    // Setup action tags
-    setupActionTags(search);
-    
     dom.editInfoPopover.dataset.searchId = search.id;
     dom.editInfoPopover.dataset.patientId = patient.id;
     dom.editInfoPopover.classList.remove('hidden');
@@ -4540,75 +4535,6 @@ Can I get a ticket/reference number and confirm the best callback/fax?"`;
       dom.patientSelect.addEventListener('change', handlePatientSwitch);
     }
     renderAll();
-  }
-
-  // === SIMPLE ACTION TAGS SYSTEM ===
-  
-  // Simple action tags data storage (extends search objects)
-  function getActionTags(search) {
-    return search.actionTags || [];
-  }
-  
-  function setActionTags(search, tags) {
-    search.actionTags = tags;
-  }
-  
-  // Setup action tags checkboxes when popover opens
-  function setupActionTags(search) {
-    const container = document.getElementById('actionTagsContainer');
-    if (!container) return;
-    
-    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-    const currentTags = getActionTags(search);
-    
-    // Set checkbox states based on current tags
-    checkboxes.forEach(checkbox => {
-      const tagId = checkbox.dataset.tag;
-      checkbox.checked = currentTags.includes(tagId);
-      
-      // Add change listener
-      checkbox.addEventListener('change', () => {
-        const updatedTags = Array.from(checkboxes)
-          .filter(cb => cb.checked)
-          .map(cb => cb.dataset.tag);
-        
-        setActionTags(search, updatedTags);
-        updateSearchDisplay(); // Refresh the search cards display
-      });
-    });
-  }
-  
-  // Add action tags display to search cards
-  function renderActionTagsBadges(search) {
-    const tags = getActionTags(search);
-    if (!tags.length) return '';
-    
-    const tagMap = {
-      waiting_transport: { icon: '🚐', label: 'Waiting Transport' },
-      schedule_transport: { icon: '📅', label: 'Schedule Transport' },
-      contact_patient: { icon: '📞', label: 'Contact Patient' },
-      verify_insurance: { icon: '💳', label: 'Verify Insurance' },
-      send_packet: { icon: '📦', label: 'Send Packet' },
-      follow_up_call: { icon: '☎️', label: 'Follow-up Call' }
-    };
-    
-    return `
-      <div style="display: flex; gap: 6px; margin: 8px 0 4px 0; flex-wrap: wrap;">
-        ${tags.map(tagId => {
-          const tag = tagMap[tagId];
-          if (!tag) return '';
-          return `
-            <span style="display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; 
-                         background: linear-gradient(135deg, #fef3c7, #fed7aa); 
-                         border: 1px solid #f59e0b; border-radius: 12px; 
-                         font-size: 0.75rem; color: #92400e; font-weight: 500;">
-              <span>${tag.icon}</span>
-              <span>${tag.label}</span>
-            </span>
-          `;
-        }).join('')}
-      </div>
-    `;
   }
 
   if (document.readyState === 'loading') {

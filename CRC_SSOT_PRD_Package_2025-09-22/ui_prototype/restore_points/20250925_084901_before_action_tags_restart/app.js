@@ -69,7 +69,7 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
     if (typeof document === 'undefined') return;
     const styleId = 'status-theme-styles';
     const existing = document.getElementById(styleId);
-    const css = Object.entries(STATUS_STYLES)
+    const statusCss = Object.entries(STATUS_STYLES)
       .map(([key, style]) => {
         const badgeColor = style.badge || '#6B7280';
         const badgeTextColor = style.badgeText || pickBadgeTextColor(badgeColor);
@@ -81,6 +81,152 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
         `;
       })
       .join('\n');
+
+    // Add facet chip base styles
+    const facetCss = `
+      .facet-chips {
+        display: flex;
+        gap: 6px;
+        margin: 8px 0 4px 0;
+        flex-wrap: wrap;
+      }
+      .facet-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 6px;
+        font-size: 0.75rem;
+        background: rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 12px;
+        color: rgba(0,0,0,0.7);
+        line-height: 1.2;
+      }
+      .chip-ic {
+        font-size: 0.7rem;
+        opacity: 0.8;
+      }
+    `;
+
+    // Add action tag styles
+    const actionTagCss = `
+      .action-tags {
+        display: flex;
+        gap: 8px;
+        margin: 6px 0 8px 0;
+        flex-wrap: wrap;
+      }
+      .action-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        background: linear-gradient(135deg, #fef3c7, #fed7aa);
+        border: 1px solid #f59e0b;
+        border-radius: 16px;
+        color: #92400e;
+        font-weight: 500;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      }
+      .action-tag .tag-icon {
+        font-size: 0.9rem;
+      }
+      .action-tags-section {
+        margin: 12px 0;
+        padding: 12px;
+        border: 2px solid #3b82f6;
+        border-radius: 4px;
+        background: #dbeafe !important;
+        min-height: 60px;
+      }
+      .action-tags-section label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        color: #1e40af;
+        text-transform: uppercase;
+      }
+      .action-tags-selector {
+        margin: 8px 0;
+      }
+      .tag-category {
+        margin-bottom: 12px;
+      }
+      .tag-category h4 {
+        margin: 0 0 6px 0;
+        font-size: 0.85rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .tag-options {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .tag-option {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        background: #f9fafb;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .tag-option:hover {
+        background: #f3f4f6;
+        border-color: #9ca3af;
+      }
+      .tag-option.active {
+        background: #fef3c7;
+        border-color: #f59e0b;
+        color: #92400e;
+      }
+      .action-tags-current {
+        margin: 8px 0;
+        min-height: 32px;
+      }
+      .current-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        margin: 2px 4px 2px 0;
+        font-size: 0.75rem;
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 12px;
+        color: #92400e;
+      }
+      .remove-tag {
+        margin-left: 4px;
+        padding: 0 4px;
+        background: none;
+        border: none;
+        color: #b45309;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.9rem;
+        line-height: 1;
+      }
+      .remove-tag:hover {
+        color: #dc2626;
+      }
+      .no-tags {
+        color: #6b7280;
+        font-style: italic;
+        font-size: 0.8rem;
+        margin: 0;
+      }
+    `;
+
+    const css = statusCss + '\n' + facetCss + '\n' + actionTagCss;
 
     if (existing) {
       existing.textContent = css;
@@ -195,6 +341,108 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
     };
   }
 
+  // Facet icons and labels
+  const FACET_ICONS = {
+    transport: { icon: '🚗', label: 'Transport' },
+    accepted:  { icon: '✓',  label: 'Accepted' },
+    hold:      { icon: '🕒', label: 'Hold' },
+    docs:      { icon: '📤', label: 'Docs sent' },
+    recheck:   { icon: '🔁', label: 'Recheck' },
+    insurance: { icon: '🧾', label: 'Insurance' },
+    reassess:  { icon: '⚠️', label: 'Reassess' },
+    note:      { icon: '📝', label: 'Note' }
+  };
+
+  // display/order priority for chips
+  const FACET_ORDER = ['transport','accepted','hold','docs','recheck','insurance','reassess','note'];
+
+  // === Stage derivation (one primary state for color) ===
+  function deriveStage(events = []) {
+    const ev = [...(events || [])].sort((a,b) => b.ts.localeCompare(a.ts));
+    const has = (pred) => ev.find(pred);
+
+    if (has(e => e.type==='call_outcome' && e.payload?.outcome==='patient_denies')) return 'canceled';
+    if (has(e => e.type==='call_outcome' && e.payload?.outcome==='facility_denied')) return 'denied';
+    if (has(e => e.type==='status_override' && e.payload?.status==='expired')) return 'expired';
+    if (has(e => e.type==='transport_scheduled')) return 'waiting_transport';
+    if (has(e => e.type==='acceptance')) return 'accepted';
+    if (has(e => e.type==='docs_sent' || e.type==='packet_sent')) return 'packet_sent';
+    if (has(e => e.type==='call_outcome' && e.payload?.outcome==='no_beds')) return 'no_beds';
+    if (has(e => e.type==='note' && e.payload?.reassess === true)) return 'reassess_required';
+    if (has(e => e.type==='call_outcome' && e.payload?.awaiting === 'rounds')) return 'pending_review';
+    return 'searching';
+  }
+
+  // === Facet derivation (orthogonal truths) ===
+  function deriveFacets(events = []) {
+    const ev = [...(events || [])].sort((a,b)=>b.ts.localeCompare(a.ts));
+    const facets = new Set();
+
+    if (ev.find(e => e.type==='acceptance')) facets.add('accepted');
+    const hold = ev.find(e => e.type==='acceptance' && e.payload?.hold_until);
+    if (hold && new Date(hold.payload.hold_until) > new Date()) facets.add('hold');
+
+    if (ev.find(e => e.type==='transport_scheduled')) facets.add('transport');
+    if (ev.find(e => e.type==='docs_sent' || e.type==='packet_sent')) facets.add('docs');
+
+    const nb = ev.find(e => e.type==='call_outcome' && e.payload?.outcome==='no_beds' && e.payload?.recheck_at);
+    if (nb && new Date(nb.payload.recheck_at) > new Date()) facets.add('recheck');
+
+    if (ev.find(e => e.payload?.insurance_status)) facets.add('insurance');
+    if (ev.find(e => e.payload?.reassess === true)) facets.add('reassess');
+    if (ev.find(e => e.type==='note')) facets.add('note');
+
+    // return in a stable visual order
+    return FACET_ORDER.filter(f => facets.has(f));
+  }
+
+  // Build chips HTML (wraps in .facet-chips). Uses latest event data for labels.
+  function getFacetChipsHtml(facets = [], events = []) {
+    if (!facets.length) return '';
+    const sorted = [...(events||[])].sort((a,b)=>b.ts.localeCompare(a.ts));
+    const latest = (type) => sorted.find(e => e.type === type);
+
+    const parts = facets.map((f) => {
+      const meta = FACET_ICONS[f];
+      if (!meta) return '';
+      let label = meta.label;
+      if (f === 'hold') {
+        const a = latest('acceptance');
+        if (a?.payload?.hold_until) label += ' ' + formatDisplayTimestamp(a.payload.hold_until);
+      }
+      if (f === 'transport') {
+        const t = latest('transport_scheduled');
+        if (t?.payload?.pickup_at) label += ' ' + formatDisplayTimestamp(t.payload.pickup_at);
+      }
+      if (f === 'docs') {
+        const d = latest('docs_sent') || latest('packet_sent');
+        if (Array.isArray(d?.payload?.docs) && d.payload.docs.length) {
+          label += ': ' + d.payload.docs.join(', ');
+        }
+      }
+      if (f === 'recheck') {
+        const nb = latest('call_outcome');
+        if (nb?.payload?.recheck_at) label += ' ' + formatDisplayTimestamp(nb.payload.recheck_at);
+      }
+      return `<span class="facet-chip" data-facet="${f}" title="${label}">
+                <span class="chip-ic">${meta.icon}</span><span class="chip-label">${label}</span>
+              </span>`;
+    }).filter(Boolean);
+
+    return `<div class="facet-chips">${parts.join(' ')}</div>`;
+  }
+
+  function formatDisplayTimestamp(value) {
+    if (!value) return '';
+    try {
+      const date = new Date(value);
+      const options = { hour: '2-digit', minute: '2-digit' };
+      return date.toLocaleString('en-US', options);
+    } catch (err) {
+      return value;
+    }
+  }
+
   const channelLabels = {
     fax: 'Fax',
     phone: 'Phone',
@@ -248,6 +496,20 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
   };
 
   const patientScenarios = newPatientScenarios;
+
+  // Add sample action tags to searches for demonstration
+  patientScenarios.forEach((scenario) => {
+    scenario.searches.forEach((search, index) => {
+      // Add some sample action tags to demonstrate the functionality
+      if (index === 0) {
+        search.actionTags = ['waiting_transport', 'contact_patient'];
+      } else if (index === 1) {
+        search.actionTags = ['verify_insurance', 'send_packet'];
+      } else if (index === 2 && scenario.searches.length > 2) {
+        search.actionTags = ['waiting_auth', 'follow_up_call'];
+      }
+    });
+  });
 
   patientScenarios.forEach((scenario) => {
     if (commitmentFixtures[scenario.id]) {
@@ -314,18 +576,91 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
     STATUS_OVERRIDE: 'status_override'
   };
 
-  // Status derivation from events (priority: last matching rule wins)
+  // Status derivation from events (canonical snake_case, used by presentation)
   function deriveSearchStatus(events = []) {
-    for (const e of [...events].sort((a,b) => b.ts.localeCompare(a.ts))) {
-      if (e.type === 'call_outcome' && e.payload.outcome === 'patient_denies') return 'Canceled';
-      if (e.type === 'acceptance') return 'Accepted';
-      if (e.type === 'transport_scheduled') return 'WaitingTransport';
-      if (e.type === 'docs_sent' || e.type === 'packet_sent') return 'PacketSent';
-      if (e.type === 'call_outcome' && e.payload.outcome === 'facility_denied') return 'Denied';
-      if (e.type === 'call_outcome' && e.payload.outcome === 'no_beds') return 'NoBeds';
-      if (e.type === 'call_outcome' && e.payload.outcome === 'bed_available') return 'BedAvailable';
+    return deriveStage(events);
+  }
+
+  // Action Tags System - actionable items that can be added/removed
+  const ACTION_TAG_OPTIONS = [
+    { id: 'waiting_transport', label: 'Waiting on Transport', icon: '🚐', category: 'transport' },
+    { id: 'schedule_transport', label: 'Schedule Transport', icon: '📅', category: 'transport' },
+    { id: 'waiting_uds', label: 'Waiting on UDS', icon: '🧪', category: 'docs' },
+    { id: 'waiting_auth', label: 'Waiting on Authorization', icon: '📋', category: 'insurance' },
+    { id: 'schedule_intake', label: 'Schedule Intake', icon: '📝', category: 'process' },
+    { id: 'verify_insurance', label: 'Verify Insurance', icon: '💳', category: 'insurance' },
+    { id: 'contact_patient', label: 'Contact Patient', icon: '📞', category: 'communication' },
+    { id: 'contact_family', label: 'Contact Family', icon: '👨‍👩‍👧', category: 'communication' },
+    { id: 'send_packet', label: 'Send Packet', icon: '📦', category: 'docs' },
+    { id: 'follow_up_call', label: 'Follow-up Call Needed', icon: '☎️', category: 'communication' },
+    { id: 'bed_confirmation', label: 'Bed Confirmation Needed', icon: '🛏️', category: 'process' },
+    { id: 'medical_clearance', label: 'Medical Clearance Pending', icon: '🏥', category: 'docs' },
+    { id: 'social_work_eval', label: 'Social Work Evaluation', icon: '👩‍⚕️', category: 'process' },
+    { id: 'level_of_care', label: 'Level of Care Review', icon: '📊', category: 'process' }
+  ];
+
+  // Action tag management functions
+  function getActionTags(search) {
+    return search.actionTags || [];
+  }
+
+  function addActionTag(search, tagId) {
+    if (!search.actionTags) search.actionTags = [];
+    if (!search.actionTags.includes(tagId)) {
+      search.actionTags.push(tagId);
+      // Add event to history
+      const tagDef = ACTION_TAG_OPTIONS.find(t => t.id === tagId);
+      if (tagDef && search.events) {
+        search.events.push({
+          type: 'action_tag_added',
+          tag_id: tagId,
+          tag_label: tagDef.label,
+          user_id: 'current_user',
+          ts: new Date().toISOString(),
+          details: `Added action tag: ${tagDef.label}`
+        });
+      }
     }
-    return 'Searching';
+  }
+
+  function removeActionTag(search, tagId) {
+    if (!search.actionTags) return;
+    const index = search.actionTags.indexOf(tagId);
+    if (index > -1) {
+      search.actionTags.splice(index, 1);
+      // Add event to history
+      const tagDef = ACTION_TAG_OPTIONS.find(t => t.id === tagId);
+      if (tagDef && search.events) {
+        search.events.push({
+          type: 'action_tag_removed',
+          tag_id: tagId,
+          tag_label: tagDef.label,
+          user_id: 'current_user',
+          ts: new Date().toISOString(),
+          details: `Removed action tag: ${tagDef.label}`
+        });
+      }
+    }
+  }
+
+  function renderActionTags(search) {
+    const tags = getActionTags(search);
+    if (!tags.length) return '';
+    
+    return `
+      <div class="action-tags">
+        ${tags.map(tagId => {
+          const tagDef = ACTION_TAG_OPTIONS.find(t => t.id === tagId);
+          if (!tagDef) return '';
+          return `
+            <div class="action-tag" data-tag-id="${tagId}" data-category="${tagDef.category}">
+              <span class="tag-icon">${tagDef.icon}</span>
+              <span class="tag-label">${tagDef.label}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
   }
 
   // Add event to search (with concurrency control)
@@ -642,6 +977,7 @@ function loadStoredPanelVisibility() {
       'drawerSave', 'drawerClose', 'drawerCancel', 'drawerSavePublish', 'drawerSaveChanges', 'drawerAcceptanceSection',
       'editInfoPopover', 'closeEditPopover', 'popoverStatus', 'popoverReason', 'popoverClinician', 'popoverBedHold',
       'popoverSummary', 'openDrawerFromPopover', 'cancelEditPopover', 'saveEditPopover',
+      'actionTagsSelector', 'actionTagsCurrent',
       'conflictModal', 'closeConflict', 'conflictMessage', 'conflictForm', 'conflictAttestation', 'cancelConflict', 'confirmConflict',
       'quickHelpModal', 'closeQuickHelp', 'commitmentSummary', 'commitmentStatusPanel'
     ];
@@ -649,6 +985,14 @@ function loadStoredPanelVisibility() {
     ids.forEach((id) => {
       dom[id] = document.getElementById(id);
     });
+
+    // Debug: Check if action tags elements exist
+    if (!document.getElementById('actionTagsSelector')) {
+      showToast('DEBUG: actionTagsSelector not found in HTML');
+    }
+    if (!document.getElementById('actionTagsCurrent')) {
+      showToast('DEBUG: actionTagsCurrent not found in HTML');
+    }
 
     dom.navTabs = document.querySelectorAll('.workflow-nav li');
   }
@@ -936,6 +1280,9 @@ function loadStoredPanelVisibility() {
 
         // Generate timeline from events (updateCard.md spec)
         const events = search.events || [];
+        const facets = deriveFacets(events);
+        const facetsHtml = getFacetChipsHtml(facets, events);
+        const actionTagsHtml = renderActionTags(search);
         const timelineHtml = events.length > 0 ? `
           <div class="search-timeline" data-search-id="${search.id}">
             <div class="timeline-toggle" data-action="toggle-timeline" data-search-id="${search.id}">
@@ -960,7 +1307,8 @@ function loadStoredPanelVisibility() {
               <div class="search-facility">${search.facilityName}</div>
               <span class="status-badge" style="${badgeStyle}">${status.icon ? `${status.icon} ` : ''}${status.label}</span>
             </div>
-            ${renderActionTagsBadges(search)}
+            ${facetsHtml}
+            ${actionTagsHtml}
             <div class="search-meta">
               <span>Updated: ${search.updated}</span>
               <span>Channels: ${channels}</span>
@@ -2517,31 +2865,156 @@ Enter event type:`);
   }
 
   function openEditPopover(searchId) {
-    if (!dom.editInfoPopover) return;
-    const patient = getCurrentPatient();
-    const search = patient.searches.find((item) => item.id === searchId);
-    if (!search) {
-      showToast('Unable to open edit popover.');
+    try {
+      // Test if basic functions work
+      alert('DEBUG: openEditPopover called for search ' + searchId);
+      
+      if (!dom.editInfoPopover) {
+        alert('DEBUG: editInfoPopover not found');
+        return;
+      }
+      
+      const patient = getCurrentPatient();
+      const search = patient.searches.find((item) => item.id === searchId);
+      if (!search) {
+        alert('DEBUG: Search not found');
+        return;
+      }
+      
+      populateOptions(dom.popoverStatus, statusOptions, search.status);
+      populateOptions(dom.popoverReason, drawerReasonOptions, search.status_reason_code);
+      if (dom.popoverClinician) {
+        dom.popoverClinician.value = search.accepted_by_name || '';
+      }
+      if (dom.popoverBedHold) {
+        dom.popoverBedHold.value = search.accepted_bed_hold_until || '';
+      }
+      if (dom.popoverSummary) {
+        dom.popoverSummary.value = search.summary || '';
+      }
+      
+      alert('DEBUG: About to inject Action Tags');
+      
+      // ALWAYS inject Action Tags section for debugging
+      const popoverBody = dom.editInfoPopover.querySelector('.popover-body');
+      if (popoverBody) {
+        // Remove any existing action tags section first
+        const existing = popoverBody.querySelector('.action-tags-section');
+        if (existing) existing.remove();
+        
+        const actionTagsHTML = `
+          <div class="action-tags-section" style="background: #ff0000 !important; color: white !important; padding: 20px !important; margin: 20px 0 !important; border: 3px solid #000 !important;">
+            <h3 style="color: white !important; margin: 0 0 10px 0 !important;">🚨 ACTION TAGS DEBUG MODE 🚨</h3>
+            <div class="action-tags-selector" id="actionTagsSelector">
+              <button type="button" style="background: yellow; color: black; padding: 10px; margin: 5px;">🚐 Test Transport Tag</button>
+              <button type="button" style="background: yellow; color: black; padding: 10px; margin: 5px;">📞 Test Call Tag</button>
+            </div>
+            <div class="action-tags-current" id="actionTagsCurrent">
+              <p style="color: white !important;">Current tags will appear here</p>
+            </div>
+          </div>
+        `;
+        popoverBody.insertAdjacentHTML('beforeend', actionTagsHTML);
+        alert('DEBUG: Action Tags injected successfully!');
+      } else {
+        alert('DEBUG: Could not find popover body');
+      }
+      
+      dom.editInfoPopover.dataset.searchId = search.id;
+      dom.editInfoPopover.dataset.patientId = patient.id;
+      dom.editInfoPopover.classList.remove('hidden');
+      
+      alert('DEBUG: Popover should be visible now');
+      
+    } catch (error) {
+      alert('DEBUG ERROR: ' + error.message);
+    }
+  }
+
+  function populateActionTagsSelector(search) {
+    // Try direct DOM lookup if cached references aren't working
+    const actionTagsSelector = dom.actionTagsSelector || document.getElementById('actionTagsSelector');
+    const actionTagsCurrent = dom.actionTagsCurrent || document.getElementById('actionTagsCurrent');
+    
+    if (!actionTagsSelector || !actionTagsCurrent) {
+      showToast('Action Tags section not found - this is a debug message');
       return;
     }
-    populateOptions(dom.popoverStatus, statusOptions, search.status);
-    populateOptions(dom.popoverReason, drawerReasonOptions, search.status_reason_code);
-    if (dom.popoverClinician) {
-      dom.popoverClinician.value = search.accepted_by_name || '';
-    }
-    if (dom.popoverBedHold) {
-      dom.popoverBedHold.value = search.accepted_bed_hold_until || '';
-    }
-    if (dom.popoverSummary) {
-      dom.popoverSummary.value = search.summary || '';
+    
+    const currentTags = getActionTags(search);
+    
+    // Populate available tags (grouped by category)
+    const categories = [...new Set(ACTION_TAG_OPTIONS.map(tag => tag.category))];
+    actionTagsSelector.innerHTML = categories.map(category => {
+      const categoryTags = ACTION_TAG_OPTIONS.filter(tag => tag.category === category);
+      return `
+        <div class="tag-category">
+          <h4>${category.charAt(0).toUpperCase() + category.slice(1)}</h4>
+          <div class="tag-options">
+            ${categoryTags.map(tag => `
+              <button type="button" class="tag-option ${currentTags.includes(tag.id) ? 'active' : ''}" 
+                      data-tag-id="${tag.id}" data-action="toggle-tag">
+                <span class="tag-icon">${tag.icon}</span>
+                <span class="tag-label">${tag.label}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    // Populate current tags
+    updateCurrentTagsDisplay(search, actionTagsCurrent);
+    
+    // Add event listeners for tag toggles
+    actionTagsSelector.querySelectorAll('[data-action="toggle-tag"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleActionTag(search, btn.dataset.tagId);
+        populateActionTagsSelector(search); // Refresh display
+      });
+    });
+  }
+
+  function updateCurrentTagsDisplay(search, actionTagsCurrent) {
+    const targetElement = actionTagsCurrent || dom.actionTagsCurrent || document.getElementById('actionTagsCurrent');
+    if (!targetElement) return;
+    
+    const currentTags = getActionTags(search);
+    if (!currentTags.length) {
+      targetElement.innerHTML = '<p class="no-tags">No action tags selected</p>';
+      return;
     }
     
-    // Setup action tags
-    setupActionTags(search);
+    targetElement.innerHTML = currentTags.map(tagId => {
+      const tagDef = ACTION_TAG_OPTIONS.find(t => t.id === tagId);
+      if (!tagDef) return '';
+      return `
+        <div class="current-tag" data-tag-id="${tagId}">
+          <span class="tag-icon">${tagDef.icon}</span>
+          <span class="tag-label">${tagDef.label}</span>
+          <button type="button" class="remove-tag" data-tag-id="${tagId}" data-action="remove-tag">×</button>
+        </div>
+      `;
+    }).join('');
     
-    dom.editInfoPopover.dataset.searchId = search.id;
-    dom.editInfoPopover.dataset.patientId = patient.id;
-    dom.editInfoPopover.classList.remove('hidden');
+    // Add remove listeners
+    targetElement.querySelectorAll('[data-action="remove-tag"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        removeActionTag(search, btn.dataset.tagId);
+        populateActionTagsSelector(search); // Refresh display
+      });
+    });
+  }
+
+  function toggleActionTag(search, tagId) {
+    const currentTags = getActionTags(search);
+    if (currentTags.includes(tagId)) {
+      removeActionTag(search, tagId);
+    } else {
+      addActionTag(search, tagId);
+    }
   }
 
   function closeEditPopover() {
@@ -4540,75 +5013,6 @@ Can I get a ticket/reference number and confirm the best callback/fax?"`;
       dom.patientSelect.addEventListener('change', handlePatientSwitch);
     }
     renderAll();
-  }
-
-  // === SIMPLE ACTION TAGS SYSTEM ===
-  
-  // Simple action tags data storage (extends search objects)
-  function getActionTags(search) {
-    return search.actionTags || [];
-  }
-  
-  function setActionTags(search, tags) {
-    search.actionTags = tags;
-  }
-  
-  // Setup action tags checkboxes when popover opens
-  function setupActionTags(search) {
-    const container = document.getElementById('actionTagsContainer');
-    if (!container) return;
-    
-    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-    const currentTags = getActionTags(search);
-    
-    // Set checkbox states based on current tags
-    checkboxes.forEach(checkbox => {
-      const tagId = checkbox.dataset.tag;
-      checkbox.checked = currentTags.includes(tagId);
-      
-      // Add change listener
-      checkbox.addEventListener('change', () => {
-        const updatedTags = Array.from(checkboxes)
-          .filter(cb => cb.checked)
-          .map(cb => cb.dataset.tag);
-        
-        setActionTags(search, updatedTags);
-        updateSearchDisplay(); // Refresh the search cards display
-      });
-    });
-  }
-  
-  // Add action tags display to search cards
-  function renderActionTagsBadges(search) {
-    const tags = getActionTags(search);
-    if (!tags.length) return '';
-    
-    const tagMap = {
-      waiting_transport: { icon: '🚐', label: 'Waiting Transport' },
-      schedule_transport: { icon: '📅', label: 'Schedule Transport' },
-      contact_patient: { icon: '📞', label: 'Contact Patient' },
-      verify_insurance: { icon: '💳', label: 'Verify Insurance' },
-      send_packet: { icon: '📦', label: 'Send Packet' },
-      follow_up_call: { icon: '☎️', label: 'Follow-up Call' }
-    };
-    
-    return `
-      <div style="display: flex; gap: 6px; margin: 8px 0 4px 0; flex-wrap: wrap;">
-        ${tags.map(tagId => {
-          const tag = tagMap[tagId];
-          if (!tag) return '';
-          return `
-            <span style="display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; 
-                         background: linear-gradient(135deg, #fef3c7, #fed7aa); 
-                         border: 1px solid #f59e0b; border-radius: 12px; 
-                         font-size: 0.75rem; color: #92400e; font-weight: 500;">
-              <span>${tag.icon}</span>
-              <span>${tag.label}</span>
-            </span>
-          `;
-        }).join('')}
-      </div>
-    `;
   }
 
   if (document.readyState === 'loading') {

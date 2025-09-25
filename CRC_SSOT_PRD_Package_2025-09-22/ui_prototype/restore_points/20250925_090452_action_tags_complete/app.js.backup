@@ -4,19 +4,15 @@ import {
   facilityDirectory as facilityDirectoryData,
   transformForFacilityFinder
 } from './data/facilityDirectory.js';
-import { newPatientScenarios } from './data/newPatientScenarios.js';
+import newPatientScenarios from './data/newPatientScenarios.js';
 
 (() => {
   const asamOptions = [
     { value: '3.7WM', label: '3.7 WM — Medically Managed Withdrawal' },
     { value: '3.5COC', label: '3.5 COC — Clinically Managed High-Intensity' },
-    { value: '3.5', label: '3.5 — Clinically Managed High-Intensity Residential' },
     { value: '3.3', label: '3.3 — Population Specific High-Intensity' },
     { value: '3.1', label: '3.1 — Clinically Managed Low-Intensity' },
-    { value: '4.0WM', label: '4.0 WM — Medically Managed Intensive Withdrawal' },
-    { value: '4.0', label: '4.0 — Medically Managed Intensive Treatment' },
     { value: '2.1', label: '2.1 — Intensive Outpatient' },
-    { value: 'IP Psych', label: 'IP Psych — Inpatient Psychiatric' },
     { value: 'ACUTE201', label: 'Acute 201 — Involuntary Emergency Hold' },
     { value: 'ACUTE302', label: 'Acute 302 — Court Ordered Hold' },
     { value: 'DIAL', label: 'DIAL — Diversion & Assessment' }
@@ -31,169 +27,45 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
     { value: 'DetoxOnly', label: 'Detox Only (non-maintenance)' }
   ];
 
-  const commitmentOptions = [
-    { value: '', label: 'Select commitment status' },
-    { value: 'Voluntary', label: 'Voluntary' },
-    { value: '302Hold', label: '302 Hold' },
-    { value: '201Hold', label: '201 Hold' },
-    { value: 'CourtOrdered', label: 'Court Ordered' },
-    { value: 'None', label: 'No commitment' }
-  ];
-
-  const acuityOptions = [
-    { value: '', label: 'Select medical acuity' },
-    { value: 'Medically Monitored', label: 'Medically Monitored' },
-    { value: 'Medically Managed', label: 'Medically Managed' },
-    { value: 'High-Intensity Residential', label: 'High-Intensity Residential' },
-    { value: 'Acute Psychiatric', label: 'Acute Psychiatric' },
-    { value: 'Routine', label: 'Routine' },
-    { value: 'StepUp', label: 'Step Up' },
-    { value: 'Secured', label: 'Secured' }
-  ];
-
-  // Status styles from updateCard.md specification (canonical snake_case keys)
-  const STATUS_STYLES = {
-    searching:         { badge:'#6B7280', badgeText: '#ffffff', bg:'#F3F4F6', icon:'⟳', label: 'Searching' },
-    packet_sent:       { badge:'#2563EB', badgeText: '#ffffff', bg:'#EFF6FF', icon:'📤', label: 'Packet sent' },
-    accepted:          { badge:'#16A34A', badgeText: '#000000', bg:'#ECFDF5', icon:'✓', label: 'Accepted' },
-    waiting_transport: { badge:'#4F46E5', badgeText: '#ffffff', bg:'#EEF2FF', icon:'🚗', label: 'Waiting transport' },
-    pending_review:    { badge:'#D97706', badgeText: '#000000', bg:'#FFFBEB', icon:'⏰', label: 'Pending review' },
-    no_beds:           { badge:'#334155', badgeText: '#ffffff', bg:'#F1F5F9', icon:'🛏️', label: 'No beds' },
-    denied:            { badge:'#DC2626', badgeText: '#ffffff', bg:'#FEF2F2', icon:'✗', label: 'Denied' },
-    canceled:          { badge:'#0EA5E9', badgeText: '#000000', bg:'#F0F9FF', icon:'🚫', label: 'Canceled' },
-    expired:           { badge:'#52525B', badgeText: '#ffffff', bg:'#FAFAFA', icon:'⧗', label: 'Hold expired' },
-    reassess_required: { badge:'#C026D3', badgeText: '#ffffff', bg:'#F8E8FF', icon:'⚠️', label: 'Reassess required' }
+  const canonicalStatusPalette = {
+    Waiting: {
+      label: 'Waiting / Sent',
+      icon: '⧗',
+      chipClass: 'status-badge badge-waiting',
+      rowClass: 'st-pending'
+    },
+    Accepted: {
+      label: 'Accepted',
+      icon: '✓',
+      chipClass: 'status-badge badge-accepted',
+      rowClass: 'st-accepted'
+    },
+    Denied: {
+      label: 'Denied',
+      icon: '⨯',
+      chipClass: 'status-badge badge-denied',
+      rowClass: 'st-denied'
+    },
+    NoBeds: {
+      label: 'No beds',
+      icon: '∅',
+      chipClass: 'status-badge badge-nobeds',
+      rowClass: 'st-nobeds'
+    }
   };
 
-  function injectStatusThemeStyles() {
-    if (typeof document === 'undefined') return;
-    const styleId = 'status-theme-styles';
-    const existing = document.getElementById(styleId);
-    const css = Object.entries(STATUS_STYLES)
-      .map(([key, style]) => {
-        const badgeColor = style.badge || '#6B7280';
-        const badgeTextColor = style.badgeText || pickBadgeTextColor(badgeColor);
-        const backgroundColor = style.bg || '#F3F4F6';
-        return `
-          .search-row[data-status-key="${key}"] { background:${backgroundColor}; border-left:3px solid ${badgeColor}; }
-          .search-row[data-status-key="${key}"] .status-badge { background:${badgeColor}; color:${badgeTextColor}; }
-          .history-entry[data-status-key="${key}"] .status-badge { background:${badgeColor}; color:${badgeTextColor}; }
-        `;
-      })
-      .join('\n');
-
-    if (existing) {
-      existing.textContent = css;
-    } else {
-      const styleEl = document.createElement('style');
-      styleEl.id = styleId;
-      styleEl.textContent = css;
-      document.head.appendChild(styleEl);
-    }
-  }
-
-  const STATUS_KEY_ALIASES = {
-    searching: 'searching',
-    Searching: 'searching',
-    PendingReview: 'pending_review',
-    'pending_review': 'pending_review',
-    AwaitingCallback: 'pending_review',
-    AwaitingFax: 'pending_review',
-    AwaitingRounds: 'pending_review',
-    PacketSent: 'packet_sent',
-    WaitingTransport: 'waiting_transport',
-    Accepted: 'accepted',
-    Denied: 'denied',
-    NoBeds: 'no_beds',
-    Canceled: 'canceled',
-    Cancelled: 'canceled',
-    Expired: 'expired',
-    ReassessRequired: 'reassess_required',
-    Reassess: 'reassess_required'
+  const statusConfig = {
+    Searching: { ...canonicalStatusPalette.Waiting, label: 'Waiting — Searching', canonical: 'Waiting' },
+    PendingReview: { ...canonicalStatusPalette.Waiting, label: 'Waiting — Pending review', canonical: 'Waiting' },
+    AwaitingCallback: { ...canonicalStatusPalette.Waiting, label: 'Waiting — Awaiting call-back', canonical: 'Waiting' },
+    AwaitingFax: { ...canonicalStatusPalette.Waiting, label: 'Waiting — Awaiting fax', canonical: 'Waiting' },
+    PacketSent: { ...canonicalStatusPalette.Waiting, label: 'Waiting — Packet sent', canonical: 'Waiting' },
+    WaitingTransport: { ...canonicalStatusPalette.Waiting, label: 'Waiting — Transport', canonical: 'Waiting' },
+    Accepted: { ...canonicalStatusPalette.Accepted, canonical: 'Accepted' },
+    Denied: { ...canonicalStatusPalette.Denied, canonical: 'Denied' },
+    NoBeds: { ...canonicalStatusPalette.NoBeds, canonical: 'NoBeds' },
+    Canceled: { ...canonicalStatusPalette.Waiting, label: 'Waiting — Canceled', canonical: 'Waiting' }
   };
-
-  function hexToRgb(hex = '') {
-    const normalized = hex.trim().replace('#', '');
-    if (![3, 6].includes(normalized.length)) return null;
-    const chunkSize = normalized.length === 3 ? 1 : 2;
-    const expand = (value) => (value.length === 1 ? value.repeat(2) : value);
-    const parts = normalized.match(new RegExp(`.{${chunkSize}}`, 'g')) || [];
-    if (parts.length !== 3) return null;
-    const [r, g, b] = parts.map((part) => parseInt(expand(part), 16));
-    if ([r, g, b].some((value) => Number.isNaN(value))) return null;
-    return [r, g, b];
-  }
-
-  function srgbToLinearComponent(component) {
-    const srgb = component / 255;
-    return srgb <= 0.03928 ? srgb / 12.92 : Math.pow((srgb + 0.055) / 1.055, 2.4);
-  }
-
-  function luminance(hex) {
-    const rgb = hexToRgb(hex);
-    if (!rgb) return null;
-    const [r, g, b] = rgb.map(srgbToLinearComponent);
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  }
-
-  function contrastRatio(hexA, hexB) {
-    const lumA = luminance(hexA);
-    const lumB = luminance(hexB);
-    if (lumA === null || lumB === null) return null;
-    const [light, dark] = lumA > lumB ? [lumA, lumB] : [lumB, lumA];
-    return (light + 0.05) / (dark + 0.05);
-  }
-
-  function pickBadgeTextColor(badgeHex, threshold = 4.5) {
-    const whiteContrast = contrastRatio(badgeHex, '#ffffff');
-    const blackContrast = contrastRatio(badgeHex, '#000000');
-
-    if (whiteContrast !== null && whiteContrast >= threshold) {
-      return '#ffffff';
-    }
-
-    if (blackContrast !== null && blackContrast >= threshold) {
-      return '#000000';
-    }
-
-    if (whiteContrast === null && blackContrast === null) {
-      return '#ffffff';
-    }
-
-    if ((whiteContrast || 0) >= (blackContrast || 0)) {
-      return '#ffffff';
-    }
-
-    return '#000000';
-  }
-
-  function normalizeStatusKey(raw) {
-    if (raw === undefined || raw === null) return 'searching';
-    if (STATUS_KEY_ALIASES[raw]) return STATUS_KEY_ALIASES[raw];
-    const compact = String(raw)
-      .toLowerCase()
-      .trim()
-      .replace(/\s+|[-–—]/g, '_')
-      .replace(/[^a-z0-9_]/g, '');
-    if (STATUS_KEY_ALIASES[compact]) return STATUS_KEY_ALIASES[compact];
-    if (STATUS_STYLES[compact]) return compact;
-    return 'searching';
-  }
-
-  function getStatusPresentation(rawStatus) {
-    const key = normalizeStatusKey(rawStatus);
-    const style = STATUS_STYLES[key] || STATUS_STYLES.searching;
-    const badgeColor = style.badge || '#6B7280';
-    const badgeTextColor = style.badgeText || pickBadgeTextColor(badgeColor);
-    return {
-      key,
-      label: style.label || key.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
-      icon: style.icon || '',
-      badgeColor,
-      badgeTextColor,
-      backgroundColor: style.bg || '#F3F4F6'
-    };
-  }
 
   const channelLabels = {
     fax: 'Fax',
@@ -203,28 +75,26 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
   };
 
   const statusOptions = [
-    { value: 'searching', label: 'Searching' },
-    { value: 'pending_review', label: 'Pending review' },
-    { value: 'packet_sent', label: 'Packet sent' },
-    { value: 'waiting_transport', label: 'Waiting transport' },
-    { value: 'accepted', label: 'Accepted' },
-    { value: 'denied', label: 'Denied' },
-    { value: 'no_beds', label: 'No beds' },
-    { value: 'canceled', label: 'Canceled' },
-    { value: 'expired', label: 'Hold expired' },
-    { value: 'reassess_required', label: 'Reassess required' }
+    { value: 'Searching', label: 'Searching' },
+    { value: 'PendingReview', label: 'Pending review' },
+    { value: 'PacketSent', label: 'Packet sent' },
+    { value: 'WaitingTransport', label: 'Waiting transport' },
+    { value: 'Accepted', label: 'Accepted' },
+    { value: 'Denied', label: 'Denied' },
+    { value: 'NoBeds', label: 'No beds' },
+    { value: 'Canceled', label: 'Canceled' }
   ];
 
   const quickReasonDefinitions = [
-    { value: 'ACCEPT_PHONE', label: 'Bed hold confirmed — phone', status: 'accepted', requiresClinician: true },
-    { value: 'PACKET_SENT', label: 'Packet sent to facility', status: 'packet_sent' },
-    { value: 'PENDING_AWAITING_ROUNDS', label: 'Waiting for intake rounds', status: 'pending_review' },
-    { value: 'PA_SUBMITTED', label: 'PA submitted', status: 'pending_review', updatesPAStatus: 'SUBMITTED' },
-    { value: 'PA_APPROVED', label: 'PA approved', status: 'accepted', updatesPAStatus: 'APPROVED' },
-    { value: 'PA_DENIED', label: 'PA denied', status: 'denied', updatesPAStatus: 'DENIED', requiresReason: true },
-    { value: 'DENY_NO_PROGRAM', label: 'Denied — no program', status: 'denied', requiresReason: true },
-    { value: 'NOBEDS_FULL_UNIT', label: 'No beds — recheck scheduled', status: 'no_beds', requiresRecheck: true },
-    { value: 'WAITING_TRANSPORT', label: 'Waiting for transport pickup', status: 'waiting_transport' }
+    { value: 'ACCEPT_PHONE', label: 'Bed hold confirmed — phone', status: 'Accepted', requiresClinician: true },
+    { value: 'PACKET_SENT', label: 'Packet sent to facility', status: 'PacketSent' },
+    { value: 'PENDING_AWAITING_ROUNDS', label: 'Waiting for intake rounds', status: 'PendingReview' },
+    { value: 'PA_SUBMITTED', label: 'PA submitted', status: 'PASubmitted', updatesPAStatus: 'SUBMITTED' },
+    { value: 'PA_APPROVED', label: 'PA approved', status: 'PAApproved', updatesPAStatus: 'APPROVED' },
+    { value: 'PA_DENIED', label: 'PA denied', status: 'PADenied', updatesPAStatus: 'DENIED', requiresReason: true },
+    { value: 'DENY_NO_PROGRAM', label: 'Denied — no program', status: 'Denied', requiresReason: true },
+    { value: 'NOBEDS_FULL_UNIT', label: 'No beds — recheck scheduled', status: 'NoBeds', requiresRecheck: true },
+    { value: 'WAITING_TRANSPORT', label: 'Waiting for transport pickup', status: 'WaitingTransport' }
   ];
 
   const drawerReasonOptions = [
@@ -247,13 +117,353 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
     unassigned: 'Unassigned'
   };
 
+  // Patient scenarios using real facility data from update2.md
   const patientScenarios = newPatientScenarios;
-
-  patientScenarios.forEach((scenario) => {
-    if (commitmentFixtures[scenario.id]) {
-      scenario.commitmentDetails = commitmentFixtures[scenario.id];
+    {
+      id: 'S1',
+      label: 'S1 — Jordan Rivera (302 hold, methadone continue)',
+      identifiers: { name: 'Rivera, Jordan', mrn: '1234567', fin: 'FIN1000456' },
+      consent: { act148: false, part2: false, expiry: null },
+      note: {
+        asam: '3.7WM',
+        assessmentTs: '2025-09-22T08:32:00Z',
+        matNeeds: 'MethadoneContinue',
+        placementNeeded: 'Y',
+        commitment: '302Required',
+        acuity: 'Secured',
+        selectedFacility: 'Friends Hospital — Secure Detox',
+        overrideReason: '',
+        reassessFlag: 'N',
+        transferStatus: 'sent',
+        quickNotes: 'Bed confirmed for 14:00 arrival. 302 packet uploaded and waiting transport window.',
+        lastUpdated: '09/22 09:10 by Furline, M'
+      },
+      contact: {
+        next: 'Call Friends Hospital transfer center at 09:30 to lock transport window.',
+        last: '09:05 — Voicemail left for transfer center (Friends Hospital)'
+      },
+      assignment: { id: 'mlee', role: 'CRC Tech' },
+      handoff: 'Keep 302 paperwork handy; confirm transport ETA once acceptance paperwork is signed.',
+      tasks: [
+        { text: 'Confirm secure bed at Friends Hospital transfer center', owner: 'CRC RN', tone: 'info' },
+        { text: 'Upload signed 302 paperwork to packet set', owner: 'Morgan Lee', tone: 'warn' }
+      ],
+      timeline: {
+        steps: ['Arrival & assessment', 'Quick update recorded', 'Packet sent', 'Acceptance received', 'Transport scheduled', 'Transfer finalized'],
+        activeIndex: 3
+      },
+      activities: [
+        { ts: '09/22 09:05', action: 'Call facility', outcome: 'Voicemail left', notes: 'Initial outreach to Friends Hospital transfer center.' },
+        { ts: '09/22 08:55', action: 'Send packet', outcome: 'Fax sent', notes: 'Packet faxed to secure detox unit.' }
+      ],
+      board: {
+        placement: 'Friends Hospital — Secure Detox',
+        statusKey: 'accepted',
+        statusLabel: 'Accepted',
+        mat: 'Methadone continue',
+        transport: 'Needs pickup window',
+        needsTransport: true,
+        isPlaced: true,
+        assignedId: 'mlee',
+        lastUpdate: '09/22 09:10',
+        reassess: 'No'
+      },
+      searches: [
+        {
+          id: 'S1-01',
+          facilityId: 'FRIENDS_HOSP',
+          facilityName: 'Friends Hospital',
+          status: 'Accepted',
+          updated: '09/22 09:10',
+          created: '09/22 08:32',
+          channels: ['fax'],
+          summary: 'Secure bed confirmed for 14:00 arrival.',
+          assignedTo: 'mlee',
+          timeBucket: 'today'
+        },
+        {
+          id: 'S1-02',
+          facilityId: 'TEMPLE_PSYCH',
+          facilityName: 'Temple Psychiatric',
+          status: 'Denied',
+          updated: '09/22 08:40',
+          created: '09/22 08:15',
+          channels: ['fax'],
+          summary: 'Unable to support methadone continuation.',
+          assignedTo: 'mlee',
+          timeBucket: 'today'
+        }
+      ],
+      searchHistory: [
+        { ts: '09/22 09:10', status: 'Accepted', facility: 'Friends Hospital', detail: 'Bed confirmed by intake RN; holding until 14:00.' },
+        { ts: '09/22 08:55', status: 'PacketSent', facility: 'Friends Hospital', detail: 'Packet faxed to secure detox unit.' },
+        { ts: '09/22 08:40', status: 'Denied', facility: 'Temple Psychiatric', detail: 'Declined — no methadone program.' }
+      ],
+      audit: [
+        { ts: '09/22 08:58', user: 'Morgan Lee', detail: 'Override not required — facility matches preferences.' }
+      ],
+      insurance: {
+        payer: 'CBH',
+        plan: 'STANDARD_SUD',
+        memberNumber: 'CBH123456789',
+        groupNumber: 'GRP001'
+      },
+      priorAuth: {
+        payer: 'CBH',
+        plan: 'STANDARD_SUD',
+        facility: 'FRIENDS_DETOX',
+        levelOfCare: '3.7',
+        status: 'NOT_REQUIRED',
+        requirement: 'NOT_REQUIRED',
+        reason: '302 holds do not require PA for CBH',
+        submissionMethod: '',
+        refNumber: '',
+        submittedBy: '',
+        submittedDateTime: '',
+        contactLine: '888-555-0100',
+        portalUrl: '',
+        payerNotes: '302 emergency hold - no PA required per CBH policy',
+        expedited: false,
+        decision: '',
+        authNumber: '',
+        coverageSpan: '',
+        decisionTime: '',
+        agent: '',
+        attachments: {
+          coreSummary: true,
+          asam: true,
+          meds: true,
+          lastDose: false,
+          sudLabs: false,
+          docs302: true,
+          roi: false
+        },
+        slaHours: 24,
+        hoursLeft: 24,
+        lastUpdated: '2025-09-22T08:35:00Z'
+      }
+    },
+    {
+      id: 'S2',
+      label: 'S2 — Alicia Gomez (reassess after tox)',
+      identifiers: { name: 'Gomez, Alicia', mrn: '9934412', fin: 'FIN1000457' },
+      consent: { act148: true, part2: true, expiry: '2026-01-15' },
+      note: {
+        asam: '3.5COC',
+        assessmentTs: '2025-09-22T07:55:00Z',
+        matNeeds: 'MethadoneInduction',
+        placementNeeded: 'Y',
+        commitment: '',
+        acuity: 'StepUp',
+        selectedFacility: '— awaiting acceptance —',
+        overrideReason: '',
+        reassessFlag: 'Y',
+        transferStatus: 'draft',
+        quickNotes: 'MAT plan pending OTP verification. New tox result requires provider reassessment before finalize.',
+        lastUpdated: '09/22 09:25 by Chen, J'
+      },
+      contact: {
+        next: 'Check back with Hope Ridge after 11:00 rounds.',
+        last: '09:15 — Secure chat sent to MAT pharmacist for dose verification.'
+      },
+      assignment: { id: 'chen', role: 'CRS' },
+      handoff: 'Awaiting MAT verification; highlight reassess requirement before transport scheduling.',
+      tasks: [
+        { text: 'Obtain methadone verification from OTP', owner: 'CRS Chen', tone: 'warn' },
+        { text: 'Schedule reassessment with provider', owner: 'CRC Team', tone: 'info' }
+      ],
+      timeline: {
+        steps: ['Arrival & assessment', 'Quick update recorded', 'Packet sent', 'Acceptance received', 'Transport scheduled', 'Transfer finalized'],
+        activeIndex: 1
+      },
+      activities: [
+        { ts: '09/22 09:15', action: 'Secure chat', outcome: 'MAT pharmacist looped in', notes: 'Requested prior dose confirmation.' },
+        { ts: '09/22 08:50', action: 'Call facility', outcome: 'No beds', notes: 'Riverview: no female beds until tomorrow.' }
+      ],
+      board: {
+        placement: 'Searching 3.5 High Intensity',
+        statusKey: 'pending',
+        statusLabel: 'Pending review',
+        mat: 'Methadone induction',
+        transport: 'Reassess required',
+        needsTransport: false,
+        isPlaced: false,
+        assignedId: 'chen',
+        lastUpdate: '09/22 09:25',
+        reassess: 'Yes'
+      },
+      searches: [
+        {
+          id: 'S2-01',
+          facilityId: 'HOPE_RIDGE',
+          facilityName: 'Hope Ridge Recovery',
+          status: 'PendingReview',
+          updated: '09/22 09:25',
+          created: '09/22 09:20',
+          channels: ['fax', 'portal'],
+          summary: 'Clinical packet received; medical director rounds at 11:00.',
+          assignedTo: 'chen',
+          timeBucket: 'today'
+        },
+        {
+          id: 'S2-02',
+          facilityId: 'RIVERVIEW',
+          facilityName: 'Riverview Detox Center',
+          status: 'NoBeds',
+          updated: '09/22 08:50',
+          created: '09/22 08:30',
+          channels: ['phone'],
+          summary: 'No female beds until 09/23 12:00.',
+          assignedTo: 'chen',
+          timeBucket: 'today'
+        },
+        {
+          id: 'S2-03',
+          facilityId: 'CITY_ACUTE',
+          facilityName: 'City Acute BH',
+          status: 'PacketSent',
+          updated: '09/22 09:05',
+          created: '09/22 08:45',
+          channels: ['fax', 'email'],
+          summary: 'Awaiting callback; requires 302 paperwork if accepted.',
+          assignedTo: 'chen',
+          timeBucket: 'today'
+        }
+      ],
+      searchHistory: [
+        { ts: '09/22 09:25', status: 'PendingReview', facility: 'Hope Ridge Recovery', detail: 'Packet under review; follow up after rounds.' },
+        { ts: '09/22 08:50', status: 'NoBeds', facility: 'Riverview Detox Center', detail: 'No beds available until tomorrow.' },
+        { ts: '09/22 08:45', status: 'PacketSent', facility: 'City Acute BH', detail: 'Packet sent; waiting for secure callback.' }
+      ],
+      audit: [
+        { ts: '09/22 09:18', user: 'J. Chen', detail: 'Flagged reassessment required due to tox result.' }
+      ],
+      insurance: {
+        payer: 'IBHC',
+        plan: 'COMMERCIAL',
+        memberNumber: 'IBHC987654321',
+        groupNumber: 'GRP002'
+      },
+      priorAuth: {
+        payer: 'IBHC',
+        plan: 'COMMERCIAL',
+        facility: 'HOPE_RIDGE',
+        levelOfCare: '3.5',
+        status: 'SUBMITTED',
+        requirement: 'REQUIRED',
+        reason: 'Inpatient ASAM 3.5 requires PA',
+        submissionMethod: 'Portal',
+        refNumber: 'IBHC-PA-2025-0922-1102',
+        submittedBy: 'Morgan Lee',
+        submittedDateTime: '2025-09-22T11:02:00',
+        contactLine: '888-555-0100',
+        portalUrl: 'https://provider.ibhc.com/auth',
+        payerNotes: 'Clinical risk requires secure detox; CIWA 11 ↑',
+        expedited: false,
+        decision: '',
+        authNumber: '',
+        coverageSpan: '',
+        decisionTime: '',
+        agent: '',
+        attachments: {
+          coreSummary: true,
+          asam: true,
+          meds: true,
+          lastDose: true,
+          sudLabs: false,
+          docs302: false,
+          roi: true
+        },
+        slaHours: 24,
+        hoursLeft: 7,
+        lastUpdated: '2025-09-22T11:02:00Z'
+      }
+    },
+    {
+      id: 'S3',
+      label: 'S3 — Chris Patel (step-down planning)',
+      identifiers: { name: 'Patel, Chris', mrn: '7722101', fin: 'FIN1000458' },
+      consent: { act148: true, part2: false, expiry: '2025-12-01' },
+      note: {
+        asam: '3.1',
+        assessmentTs: '2025-09-21T16:20:00Z',
+        matNeeds: 'None',
+        placementNeeded: 'Y',
+        commitment: '',
+        acuity: 'Routine',
+        selectedFacility: 'Sunrise Treatment Center — Step-down',
+        overrideReason: '',
+        reassessFlag: 'N',
+        transferStatus: 'accepted',
+        quickNotes: 'Family meeting complete. Sunrise ready for evening admission; transport scheduling in progress.',
+        lastUpdated: '09/22 08:20 by Patel, S'
+      },
+      contact: {
+        next: 'Coordinate pickup with MedTrans for 16:30 arrival.',
+        last: '08:45 — Sunrise confirmed bed hold until 17:00.'
+      },
+      assignment: { id: 'mlee', role: 'CRC Tech' },
+      handoff: 'Finalize transport with MedTrans and confirm with Sunrise admissions.',
+      tasks: [
+        { text: 'Share discharge summary with Sunrise clinical team', owner: 'Morgan Lee', tone: 'info' },
+        { text: 'Confirm transport ETA with MedTrans', owner: 'Transfer Center', tone: 'info' }
+      ],
+      timeline: {
+        steps: ['Arrival & assessment', 'Quick update recorded', 'Packet sent', 'Acceptance received', 'Transport scheduled', 'Transfer finalized'],
+        activeIndex: 4
+      },
+      activities: [
+        { ts: '09/22 08:45', action: 'Portal update', outcome: 'Accepted', notes: 'Sunrise confirmed acceptance and bed hold until 17:00.' },
+        { ts: '09/21 18:30', action: 'Send packet', outcome: 'Portal', notes: 'Packet shared via Sunrise portal.' }
+      ],
+      board: {
+        placement: 'Sunrise Treatment Center',
+        statusKey: 'accepted',
+        statusLabel: 'Accepted',
+        mat: 'No MAT need',
+        transport: 'Transport scheduled',
+        needsTransport: true,
+        isPlaced: true,
+        assignedId: 'mlee',
+        lastUpdate: '09/22 08:45',
+        reassess: 'No'
+      },
+      searches: [
+        {
+          id: 'S3-01',
+          facilityId: 'SUNRISE',
+          facilityName: 'Sunrise Treatment Center',
+          status: 'Accepted',
+          updated: '09/22 08:45',
+          created: '09/21 18:30',
+          channels: ['portal'],
+          summary: 'Bed held until 17:00; transport pending.',
+          assignedTo: 'mlee',
+          timeBucket: 'thisweek'
+        },
+        {
+          id: 'S3-02',
+          facilityId: 'SEASIDE',
+          facilityName: 'Seaside Recovery',
+          status: 'Canceled',
+          updated: '09/21 16:10',
+          created: '09/21 15:00',
+          channels: ['fax'],
+          summary: 'Patient preference change after family consult.',
+          assignedTo: 'mlee',
+          timeBucket: 'last3days'
+        }
+      ],
+      searchHistory: [
+        { ts: '09/22 08:45', status: 'Accepted', facility: 'Sunrise Treatment Center', detail: 'Acceptance confirmed in portal; bed hold until 17:00.' },
+        { ts: '09/21 16:10', status: 'Canceled', facility: 'Seaside Recovery', detail: 'Search canceled — patient chose Sunrise.' },
+        { ts: '09/21 15:00', status: 'PacketSent', facility: 'Seaside Recovery', detail: 'Packet sent via fax.' }
+      ],
+      audit: [
+        { ts: '09/21 18:35', user: 'Morgan Lee', detail: 'Marked Sunrise as selected facility and notified transport.' }
+      ]
     }
-  });
+  ];
 
   patientScenarios.forEach((scenario) => {
     if (commitmentFixtures[scenario.id]) {
@@ -302,88 +512,6 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
   const panelStorageKey = 'crc-ssot-panel-visibility';
 
   const commitmentSettingsKey = 'crc-ssot-commitment-settings';
-
-  // Event-driven bed search model (from updateCard.md spec)
-  const BedSearchEventTypes = {
-    CALL_OUTCOME: 'call_outcome',
-    DOCS_SENT: 'docs_sent', 
-    PACKET_SENT: 'packet_sent',
-    ACCEPTANCE: 'acceptance',
-    TRANSPORT_SCHEDULED: 'transport_scheduled',
-    NOTE: 'note',
-    STATUS_OVERRIDE: 'status_override'
-  };
-
-  // Status derivation from events (priority: last matching rule wins)
-  function deriveSearchStatus(events = []) {
-    for (const e of [...events].sort((a,b) => b.ts.localeCompare(a.ts))) {
-      if (e.type === 'call_outcome' && e.payload.outcome === 'patient_denies') return 'Canceled';
-      if (e.type === 'acceptance') return 'Accepted';
-      if (e.type === 'transport_scheduled') return 'WaitingTransport';
-      if (e.type === 'docs_sent' || e.type === 'packet_sent') return 'PacketSent';
-      if (e.type === 'call_outcome' && e.payload.outcome === 'facility_denied') return 'Denied';
-      if (e.type === 'call_outcome' && e.payload.outcome === 'no_beds') return 'NoBeds';
-      if (e.type === 'call_outcome' && e.payload.outcome === 'bed_available') return 'BedAvailable';
-    }
-    return 'Searching';
-  }
-
-  // Add event to search (with concurrency control)
-  function addSearchEvent(search, eventType, payload, userId = 'current_user') {
-    if (!search.events) search.events = [];
-    
-    const event = {
-      id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      search_id: search.id,
-      ts: new Date().toISOString(),
-      user_id: userId,
-      type: eventType,
-      payload: payload || {},
-      version: (search.events.length + 1)
-    };
-    
-    search.events.push(event);
-    
-    // Update derived status and timestamp
-    search.status = deriveSearchStatus(search.events);
-    search.updated = formatTimestamp(new Date());
-    
-    // Add to legacy searchHistory for backwards compatibility
-    if (!search.searchHistory) search.searchHistory = [];
-    search.searchHistory.unshift({
-      ts: search.updated,
-      status: search.status,
-      facility: search.facilityName,
-      detail: formatEventDetail(event)
-    });
-    
-    return event;
-  }
-
-  // Format event for display
-  function formatEventDetail(event) {
-    const { type, payload } = event;
-    switch (type) {
-      case 'call_outcome':
-        if (payload.outcome === 'no_beds') return `No beds available${payload.recheck_time ? '; recheck at ' + payload.recheck_time : ''}`;
-        if (payload.outcome === 'bed_available') return 'Bed available for placement';
-        if (payload.outcome === 'patient_denies') return 'Patient declined placement';
-        if (payload.outcome === 'facility_denied') return 'Facility declined patient';
-        return `Call outcome: ${payload.outcome}`;
-      case 'docs_sent':
-        return `Documents sent: ${payload.docs ? payload.docs.join(', ') : 'clinical packet'}`;
-      case 'packet_sent':
-        return 'Clinical packet sent to facility';
-      case 'acceptance':
-        return `Placement accepted${payload.hold_until ? ' (hold until ' + payload.hold_until + ')' : ''}`;
-      case 'transport_scheduled':
-        return `Transport scheduled for ${payload.pickup_at}`;
-      case 'note':
-        return payload.text || 'Note added';
-      default:
-        return `${type}: ${JSON.stringify(payload)}`;
-    }
-  }
 
   const defaultPanelVisibility = {
     noteTab: true,
@@ -460,8 +588,6 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
       updateSaveButton: true
     }
   };
-
-  let patientListOverrides = null;
 
 function loadStoredPanelVisibility() {
     try {
@@ -578,9 +704,7 @@ function loadStoredPanelVisibility() {
     patientListFilters: {
       chip: 'all',
       status: '',
-      assigned: '',
-      sortBy: '',
-      sortDir: 'asc'
+      assigned: ''
     },
     session: {
       quickNotes: {},
@@ -665,26 +789,8 @@ function loadStoredPanelVisibility() {
   }
 
   function populateStaticSelects() {
-    if (dom.asamField) {
-      dom.asamField.innerHTML = asamOptions
-        .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
-        .join('');
-    }
-
     if (dom.matNeeds) {
       dom.matNeeds.innerHTML = matOptions
-        .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
-        .join('');
-    }
-
-    if (dom.threeOhTwo) {
-      dom.threeOhTwo.innerHTML = commitmentOptions
-        .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
-        .join('');
-    }
-
-    if (dom.acuity) {
-      dom.acuity.innerHTML = acuityOptions
         .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
         .join('');
     }
@@ -779,15 +885,24 @@ function loadStoredPanelVisibility() {
   }
 
   function mapStatusToFilter(status) {
-    const key = normalizeStatusKey(status);
-    if (key === 'accepted') return 'accepted';
-    if (key === 'denied') return 'denied';
-    if (key === 'no_beds') return 'nobeds';
-    if (key === 'canceled') return 'canceled';
-    if (key === 'waiting_transport') return 'waiting';
-    if (['pending_review', 'packet_sent', 'reassess_required'].includes(key)) return 'pending';
-    if (key === 'expired') return 'expired';
-    return 'searching';
+    switch (status) {
+      case 'Accepted':
+        return 'accepted';
+      case 'Denied':
+        return 'denied';
+      case 'NoBeds':
+        return 'nobeds';
+      case 'Canceled':
+        return 'canceled';
+      case 'WaitingTransport':
+        return 'waiting';
+      case 'PendingReview':
+      case 'AwaitingCallback':
+      case 'PacketSent':
+        return 'pending';
+      default:
+        return 'searching';
+    }
   }
 
   function applySearchFilters(searches) {
@@ -831,7 +946,7 @@ function loadStoredPanelVisibility() {
     const note = patient.note;
     dom.noteUpdated.textContent = note.lastUpdated;
     const asamMatch = asamOptions.find((opt) => opt.value === note.asam);
-    dom.asamField.value = asamMatch ? asamMatch.value : note.asam;
+    dom.asamField.value = asamMatch ? asamMatch.label : note.asam;
     dom.assessmentTs.value = formatTimestamp(note.assessmentTs);
     dom.matNeeds.value = note.matNeeds;
     dom.threeOhTwo.value = note.commitment || '';
@@ -925,42 +1040,18 @@ function loadStoredPanelVisibility() {
 
     dom.searchList.innerHTML = searches
       .map((search) => {
-        const status = getStatusPresentation(search.status);
+        const config = statusConfig[search.status] || statusConfig.Searching;
         const channels = search.channels.map((ch) => channelLabels[ch] || ch).join(', ');
         const reasonText = search.status_reason_text || search.summary || '';
         const confirmation = search.lastMessage
           ? `<div class="search-inline-confirm">${search.lastMessage}</div>`
           : '';
-  const rowStyle = `background:${status.backgroundColor}; background-color:${status.backgroundColor}; border-left: 3px solid ${status.badgeColor};`;
-  const badgeStyle = `background:${status.badgeColor}; background-color:${status.badgeColor}; color:${status.badgeTextColor};`;
-
-        // Generate timeline from events (updateCard.md spec)
-        const events = search.events || [];
-        const timelineHtml = events.length > 0 ? `
-          <div class="search-timeline" data-search-id="${search.id}">
-            <div class="timeline-toggle" data-action="toggle-timeline" data-search-id="${search.id}">
-              <span class="timeline-label">Timeline (${events.length})</span>
-              <span class="timeline-icon">▸</span>
-            </div>
-            <div class="timeline-content" style="display: none;">
-              ${events.slice().reverse().map(event => `
-                <div class="timeline-event">
-                  <span class="event-time">${formatTimestamp(new Date(event.ts))}</span>
-                  <span class="event-user">${staffDirectory[event.user_id] || event.user_id}</span>
-                  <span class="event-detail">${formatEventDetail(event)}</span>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        ` : '';
-
         return `
-          <div class="search-row" data-search-id="${search.id}" data-status-key="${status.key}" style="${rowStyle}">
+          <div class="search-row ${config.rowClass}" data-search-id="${search.id}">
             <div class="search-header">
               <div class="search-facility">${search.facilityName}</div>
-              <span class="status-badge" style="${badgeStyle}">${status.icon ? `${status.icon} ` : ''}${status.label}</span>
+              <span class="${config.chipClass}">${config.icon} ${config.label}</span>
             </div>
-            ${renderActionTagsBadges(search)}
             <div class="search-meta">
               <span>Updated: ${search.updated}</span>
               <span>Channels: ${channels}</span>
@@ -970,12 +1061,10 @@ function loadStoredPanelVisibility() {
               <span>${reasonText}</span>
             </div>
             ${confirmation}
-            ${timelineHtml}
             <div class="search-actions">
               <button class="ghost-btn" data-action="open-drawer" data-search-id="${search.id}">View details</button>
               <button class="ghost-btn" data-action="open-popover" data-search-id="${search.id}">Edit info</button>
               <button class="ghost-btn" data-action="record" data-search-id="${search.id}">Record acceptance</button>
-              <button class="ghost-btn" data-action="add-event" data-search-id="${search.id}">Add event</button>
             </div>
           </div>
         `;
@@ -993,28 +1082,17 @@ function loadStoredPanelVisibility() {
     dom.searchList.querySelectorAll('[data-action="record"]').forEach((btn) => {
       btn.addEventListener('click', () => showToast('Prototype action: Record acceptance handled via drawer.'));
     });
-
-    // Timeline toggle handlers (updateCard.md spec)
-    dom.searchList.querySelectorAll('[data-action="toggle-timeline"]').forEach((btn) => {
-      btn.addEventListener('click', () => toggleSearchTimeline(btn.dataset.searchId));
-    });
-
-    // Add event handlers
-    dom.searchList.querySelectorAll('[data-action="add-event"]').forEach((btn) => {
-      btn.addEventListener('click', () => showAddEventModal(btn.dataset.searchId));
-    });
   }
 
   function renderSearchHistory(patient) {
     if (!dom.searchHistory) return;
     dom.searchHistory.innerHTML = patient.searchHistory
       .map((entry) => {
-        const status = getStatusPresentation(entry.status);
-        const badgeStyle = `background:${status.badgeColor}; color:${status.badgeTextColor};`;
+        const config = statusConfig[entry.status] || statusConfig.Searching;
         return `
-          <div class="history-entry" data-status-key="${status.key}">
+          <div class="history-entry">
             <span class="history-time">${entry.ts}</span>
-            <span class="history-status status-badge" style="${badgeStyle}">${status.icon ? `${status.icon} ` : ''}${status.label}</span>
+            <span class="history-status ${config.chipClass}">${config.icon} ${config.label}</span>
             <div class="history-detail">
               <strong>${entry.facility}</strong>
               <p>${entry.detail}</p>
@@ -1023,230 +1101,6 @@ function loadStoredPanelVisibility() {
         `;
       })
       .join('');
-  }
-
-  function statusKeyToClass(value = '') {
-    const key = normalizeStatusKey(value);
-    return key.replace(/[^a-z0-9]+/gi, '-');
-  }
-
-  function resolveStaffId(name = '') {
-    if (!name) return '';
-    const match = Object.entries(staffDirectory).find(([, label]) => label.toLowerCase() === name.toLowerCase());
-    if (match) return match[0];
-    const slug = `staff_${name.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
-    staffDirectory[slug] = name;
-    return slug;
-  }
-
-  function formatPatientDisplayName(name = '') {
-    if (!name) return 'Unknown patient';
-    if (name.includes(',')) return name;
-    const parts = name.trim().split(/\s+/);
-    if (parts.length < 2) return name;
-    const last = parts.pop();
-    return `${last}, ${parts.join(' ')}`;
-  }
-
-  function formatPlacementDisplay(entry) {
-    const facilityName = entry?.facility?.name || entry?.facilityName || 'Unknown facility';
-    const level = entry.level_of_care || {};
-    const fragments = [];
-    if (level.program) fragments.push(level.program.trim());
-    if (level.code) fragments.push(level.code.trim());
-    if (!fragments.length && level.label) fragments.push(level.label.trim());
-    return fragments.length ? `${facilityName} — ${fragments.join(' ')}` : facilityName;
-  }
-
-  function mapMatDisplay(value = '') {
-    if (!value) return '—';
-    const normalized = value.toLowerCase();
-    const option = matOptions.find((opt) => opt.value.toLowerCase() === normalized);
-    const rawLabel = option ? option.label : value.replace(/[_-]+/g, ' ');
-    const lower = rawLabel.toLowerCase();
-    const formatted = lower.charAt(0).toUpperCase() + lower.slice(1);
-    return formatted.replace(/mat/gi, 'MAT');
-  }
-
-  function formatStatusDisplay(statusValue) {
-    const presentation = getStatusPresentation(statusValue);
-    const icon = presentation.icon ? `${presentation.icon} ` : '';
-    return `${icon}${presentation.label}`.trim();
-  }
-
-  function formatDisplayTimestamp(value) {
-    if (!value) return '—';
-    try {
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return value;
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      return `${month}/${day} ${hours}:${minutes}`;
-    } catch (err) {
-      return value;
-    }
-  }
-
-  function mapScenarioToRow(patient) {
-    const board = patient.board || {};
-    const statusKey = normalizeStatusKey(board.statusKey || board.statusLabel || board.status || 'searching');
-    const assignedId = board.assignedId || patient.assignment?.id || '';
-    return {
-      id: patient.id,
-      name: formatPatientDisplayName(patient.identifiers?.name || ''),
-      placement: board.placement || '',
-      mat: board.mat ? mapMatDisplay(board.mat) : board.mat || '',
-      statusKey,
-      statusLabel: formatStatusDisplay(statusKey),
-      transport: board.transport || '',
-      assignedId,
-      assignedDisplay: staffDirectory[assignedId] || 'Unassigned',
-      lastUpdate: board.lastUpdate || '',
-      reassess: board.reassess || '',
-      isPlaced: board.isPlaced || statusKey === 'accepted',
-      needsTransport: board.needsTransport || statusKey === 'waiting_transport'
-    };
-  }
-
-  function mapOverrideToRow(entry = {}) {
-    const statusKey = normalizeStatusKey(entry.status || 'searching');
-    const assignedName = entry.assigned || '';
-    const assignedId = resolveStaffId(assignedName);
-    return {
-      id: entry.id || entry.patient_name || entry.facility?.name || 'patient',
-      name: formatPatientDisplayName(entry.patient_name),
-      placement: formatPlacementDisplay(entry),
-      mat: mapMatDisplay(entry.mat),
-      statusKey,
-      statusLabel: formatStatusDisplay(statusKey),
-      transport: entry.transport || '',
-      assignedId,
-      assignedDisplay: staffDirectory[assignedId] || assignedName || 'Unassigned',
-      lastUpdate: formatDisplayTimestamp(entry.last_update),
-      reassess: entry.reassess ? 'Yes' : 'No',
-      isPlaced: statusKey === 'accepted',
-      needsTransport: statusKey === 'waiting_transport'
-    };
-  }
-
-  const PATIENT_LIST_PATH = '/doc/Review/update2.md';
-
-  // Timeline functions (updateCard.md spec)
-  function toggleSearchTimeline(searchId) {
-    const timeline = document.querySelector(`.search-timeline[data-search-id="${searchId}"]`);
-    if (!timeline) return;
-    
-    const content = timeline.querySelector('.timeline-content');
-    const icon = timeline.querySelector('.timeline-icon');
-    
-    if (content.style.display === 'none') {
-      content.style.display = 'block';
-      icon.textContent = '▾';
-    } else {
-      content.style.display = 'none';
-      icon.textContent = '▸';
-    }
-  }
-
-  function showAddEventModal(searchId) {
-    const patient = getCurrentPatient();
-    if (!patient) return;
-    
-    const search = patient.searches.find(s => s.id === searchId);
-    if (!search) return;
-
-    // Simple modal for demo - in production would be more sophisticated
-    const eventType = window.prompt(`Add event to ${search.facilityName}:
-
-Event types:
-- call_outcome
-- docs_sent  
-- packet_sent
-- acceptance
-- transport_scheduled
-- note
-
-Enter event type:`);
-
-    if (!eventType) return;
-
-    let payload = {};
-    
-    if (eventType === 'call_outcome') {
-      const outcome = window.prompt('Call outcome (no_beds, bed_available, patient_denies, facility_denied):');
-      payload.outcome = outcome;
-      if (outcome === 'no_beds') {
-        const recheckTime = window.prompt('Recheck time (optional):');
-        if (recheckTime) payload.recheck_time = recheckTime;
-      }
-    } else if (eventType === 'docs_sent' || eventType === 'packet_sent') {
-      const docs = window.prompt('Documents sent (comma separated):');
-      if (docs) payload.docs = docs.split(',').map(d => d.trim());
-    } else if (eventType === 'acceptance') {
-      const holdUntil = window.prompt('Hold until (optional):');
-      if (holdUntil) payload.hold_until = holdUntil;
-    } else if (eventType === 'transport_scheduled') {
-      const pickupAt = window.prompt('Pickup time:');
-      if (pickupAt) payload.pickup_at = pickupAt;
-    } else if (eventType === 'note') {
-      const text = window.prompt('Note text:');
-      if (text) payload.text = text;
-    }
-
-    // Add the event
-    addSearchEvent(search, eventType, payload, 'current_user');
-    
-    // Update patient searchHistory for backwards compatibility
-    if (!patient.searchHistory) patient.searchHistory = [];
-    patient.searchHistory.unshift({
-      ts: search.updated,
-      status: search.status, 
-      facility: search.facilityName,
-      detail: formatEventDetail(search.events[search.events.length - 1])
-    });
-
-    // Re-render the search list
-    renderActiveSearches(patient);
-    showToast(`Event added: ${formatEventDetail(search.events[search.events.length - 1])}`);
-  }
-
-  async function loadPatientListFromDoc() {
-    if (typeof fetch === 'undefined') {
-      patientListOverrides = null;
-      return;
-    }
-    try {
-      const response = await fetch(PATIENT_LIST_PATH);
-      if (!response.ok) {
-        patientListOverrides = null;
-        return;
-      }
-      const text = await response.text();
-      const startMarker = '<!--PATIENT_LIST_START-->';
-      const endMarker = '<!--PATIENT_LIST_END-->';
-      const startIndex = text.indexOf(startMarker);
-      const endIndex = text.indexOf(endMarker);
-      if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
-        patientListOverrides = null;
-        return;
-      }
-      const jsonText = text.slice(startIndex + startMarker.length, endIndex).trim();
-      if (!jsonText) {
-        patientListOverrides = null;
-        return;
-      }
-      const parsed = JSON.parse(jsonText);
-      if (!Array.isArray(parsed)) {
-        patientListOverrides = null;
-        return;
-      }
-      patientListOverrides = parsed.map((item) => mapOverrideToRow(item)).filter(Boolean);
-    } catch (err) {
-      console.warn('Unable to load patient list overrides', err);
-      patientListOverrides = null;
-    }
   }
 
   function applyPatientListFilters(rows) {
@@ -1259,60 +1113,35 @@ Enter event type:`);
     });
   }
 
-  function sortPatientListRows(rows) {
-    if (!state.patientListFilters.sortBy) return rows;
-    
-    const sortBy = state.patientListFilters.sortBy;
-    const sortDir = state.patientListFilters.sortDir;
-    
-    return [...rows].sort((a, b) => {
-      let aVal = a[sortBy] || '';
-      let bVal = b[sortBy] || '';
-      
-      // Handle different data types
-      if (typeof aVal === 'string') aVal = aVal.toLowerCase();
-      if (typeof bVal === 'string') bVal = bVal.toLowerCase();
-      
-      let result = 0;
-      if (aVal < bVal) result = -1;
-      else if (aVal > bVal) result = 1;
-      
-      return sortDir === 'desc' ? -result : result;
-    });
-  }
-
   function renderPatientList() {
     if (!dom.patientListBody) return;
-    const overrideRows = Array.isArray(patientListOverrides) && patientListOverrides.length
-      ? patientListOverrides
-      : null;
-    const fallbackRows = patientScenarios.map((patient) => mapScenarioToRow(patient));
-    const sourceRows = overrideRows || fallbackRows;
+    const rows = patientScenarios.map((patient) => ({
+      ...patient.board,
+      name: patient.identifiers.name,
+      id: patient.id
+    }));
 
-    const filtered = applyPatientListFilters(sourceRows);
-    const sorted = sortPatientListRows(filtered);
+    const filtered = applyPatientListFilters(rows);
 
-    if (!sorted.length) {
+    if (!filtered.length) {
       dom.patientListBody.innerHTML = `<tr><td colspan="8" class="hint">No patients match the current filters.</td></tr>`;
       return;
     }
 
-    dom.patientListBody.innerHTML = sorted
+    dom.patientListBody.innerHTML = filtered
       .map((row) => {
-        const key = normalizeStatusKey(row.statusKey || row.statusLabel || 'searching');
-        const presentation = getStatusPresentation(key);
-        const display = `${presentation.icon ? `${presentation.icon} ` : ''}${presentation.label}`;
-  const chipStyle = `background:${presentation.badgeColor}; background-color:${presentation.badgeColor}; color:${presentation.badgeTextColor};`;
+        const config = statusConfig[row.statusLabel === 'Accepted' ? 'Accepted' : row.statusLabel === 'Pending review' ? 'PendingReview' : 'Searching'];
+        const statusBadge = config ? `${config.icon} ${config.label}` : row.statusLabel;
         return `
           <tr data-patient-id="${row.id}">
-            <td>${row.name || ''}</td>
-            <td>${row.placement || ''}</td>
-            <td>${row.mat || ''}</td>
-            <td><span class="status-badge" style="${chipStyle}">${display}</span></td>
-            <td>${row.transport || ''}</td>
-            <td>${staffDirectory[row.assignedId] || row.assignedDisplay || 'Unassigned'}</td>
-            <td>${row.lastUpdate || ''}</td>
-            <td>${row.reassess || ''}</td>
+            <td>${row.name}</td>
+            <td>${row.placement}</td>
+            <td>${row.mat}</td>
+            <td><span class="status-badge badge-${row.statusKey || 'waiting'}">${statusBadge}</span></td>
+            <td>${row.transport}</td>
+            <td>${staffDirectory[row.assignedId] || 'Unassigned'}</td>
+            <td>${row.lastUpdate}</td>
+            <td>${row.reassess}</td>
           </tr>
         `;
       })
@@ -2042,7 +1871,7 @@ Enter event type:`);
 
   function updateFinalizeButton(patient) {
     if (!dom.finalizeTransfer) return;
-    const hasAcceptance = normalizeStatusKey(patient.note.transferStatus) === 'accepted' || patient.searches.some((s) => normalizeStatusKey(s.status) === 'accepted');
+    const hasAcceptance = patient.note.transferStatus === 'accepted' || patient.searches.some((s) => s.status === 'Accepted');
     const blocked = (state.session.reassessOverride[patient.id] || patient.note.reassessFlag) === 'Y';
     dom.finalizeTransfer.disabled = !(hasAcceptance && !blocked);
   }
@@ -2109,7 +1938,7 @@ Enter event type:`);
       const applyAudit = dom.quickApplyAudit ? dom.quickApplyAudit.checked : true;
       const writeSsot = dom.quickApplySsot ? dom.quickApplySsot.checked : false;
 
-      if (applyStatus && reasonDef && normalizeStatusKey(reasonDef.status) === 'no_beds' && normalizeStatusKey(search.status) === 'accepted') {
+      if (applyStatus && reasonDef && reasonDef.status === 'NoBeds' && search.status === 'Accepted') {
         state.ui.pendingConflict = {
           patientId: patient.id,
           searchId: search.id,
@@ -2211,11 +2040,8 @@ Enter event type:`);
     search.status_reason_text = message;
     search.summary = message;
     if (applyStatus && reasonDef && reasonDef.status) {
-      search.status = normalizeStatusKey(reasonDef.status);
+      search.status = reasonDef.status;
     }
-    const normalizedStatus = normalizeStatusKey(search.status);
-    const statusPresentation = getStatusPresentation(normalizedStatus);
-    search.status = normalizedStatus;
     search.updated = formatTimestamp(now);
     search.lastMessage = `${formatTimestamp(now)} — ${message}`;
     search.history = search.history || [];
@@ -2230,15 +2056,6 @@ Enter event type:`);
       const recheckTs = eta ? new Date(`${new Date().toISOString().split('T')[0]}T${eta}`) : addHoursToNow(3);
       search.nextRecheckAt = formatTimestamp(recheckTs);
     }
-
-    if (!patient.board) {
-      patient.board = {};
-    }
-    patient.board.statusKey = normalizedStatus;
-    patient.board.statusLabel = statusPresentation.label;
-    patient.board.lastUpdate = formatTimestamp(now);
-    patient.board.isPlaced = normalizedStatus === 'accepted';
-    patient.board.needsTransport = normalizedStatus === 'waiting_transport';
 
     // Handle PA status updates for PA-aware Quick Update reasons
     if (reasonDef && reasonDef.updatesPAStatus) {
@@ -2535,10 +2352,6 @@ Enter event type:`);
     if (dom.popoverSummary) {
       dom.popoverSummary.value = search.summary || '';
     }
-    
-    // Setup action tags
-    setupActionTags(search);
-    
     dom.editInfoPopover.dataset.searchId = search.id;
     dom.editInfoPopover.dataset.patientId = patient.id;
     dom.editInfoPopover.classList.remove('hidden');
@@ -2780,10 +2593,7 @@ Enter event type:`);
     if (dom.patientListBody) {
       const patientCard = findAncestor(dom.patientListBody, '.card');
       if (patientCard) {
-        const patientHeader = patientCard.querySelector('.patient-list-header');
-        if (patientHeader) {
-          patientChipContainer = patientHeader.querySelector('.filter-chips');
-        }
+        patientChipContainer = patientCard.querySelector('.filter-chips');
       }
     }
 
@@ -2831,33 +2641,6 @@ Enter event type:`);
       dom.assignedFilter.addEventListener('change', (event) => {
         state.patientListFilters.assigned = event.target.value;
         renderPatientList();
-      });
-    }
-
-    // Setup table header sorting
-    const patientListTable = document.getElementById('patientListTable');
-    if (patientListTable) {
-      const sortableHeaders = patientListTable.querySelectorAll('th.sortable');
-      sortableHeaders.forEach((header) => {
-        header.addEventListener('click', () => {
-          const sortBy = header.dataset.sort;
-          
-          // Toggle sort direction if clicking the same column
-          if (state.patientListFilters.sortBy === sortBy) {
-            state.patientListFilters.sortDir = state.patientListFilters.sortDir === 'asc' ? 'desc' : 'asc';
-          } else {
-            state.patientListFilters.sortBy = sortBy;
-            state.patientListFilters.sortDir = 'asc';
-          }
-          
-          // Update header visual indicators
-          sortableHeaders.forEach((h) => {
-            h.classList.remove('sort-asc', 'sort-desc');
-          });
-          header.classList.add(state.patientListFilters.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
-          
-          renderPatientList();
-        });
       });
     }
   }
@@ -4524,9 +4307,7 @@ Can I get a ticket/reference number and confirm the best callback/fax?"`;
     }
   };
 
-  async function init() {
-    injectStatusThemeStyles();
-    await loadPatientListFromDoc();
+  function init() {
     cacheDom();
     populateStaticSelects();
     populatePatientSelector();
@@ -4542,80 +4323,9 @@ Can I get a ticket/reference number and confirm the best callback/fax?"`;
     renderAll();
   }
 
-  // === SIMPLE ACTION TAGS SYSTEM ===
-  
-  // Simple action tags data storage (extends search objects)
-  function getActionTags(search) {
-    return search.actionTags || [];
-  }
-  
-  function setActionTags(search, tags) {
-    search.actionTags = tags;
-  }
-  
-  // Setup action tags checkboxes when popover opens
-  function setupActionTags(search) {
-    const container = document.getElementById('actionTagsContainer');
-    if (!container) return;
-    
-    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-    const currentTags = getActionTags(search);
-    
-    // Set checkbox states based on current tags
-    checkboxes.forEach(checkbox => {
-      const tagId = checkbox.dataset.tag;
-      checkbox.checked = currentTags.includes(tagId);
-      
-      // Add change listener
-      checkbox.addEventListener('change', () => {
-        const updatedTags = Array.from(checkboxes)
-          .filter(cb => cb.checked)
-          .map(cb => cb.dataset.tag);
-        
-        setActionTags(search, updatedTags);
-        updateSearchDisplay(); // Refresh the search cards display
-      });
-    });
-  }
-  
-  // Add action tags display to search cards
-  function renderActionTagsBadges(search) {
-    const tags = getActionTags(search);
-    if (!tags.length) return '';
-    
-    const tagMap = {
-      waiting_transport: { icon: '🚐', label: 'Waiting Transport' },
-      schedule_transport: { icon: '📅', label: 'Schedule Transport' },
-      contact_patient: { icon: '📞', label: 'Contact Patient' },
-      verify_insurance: { icon: '💳', label: 'Verify Insurance' },
-      send_packet: { icon: '📦', label: 'Send Packet' },
-      follow_up_call: { icon: '☎️', label: 'Follow-up Call' }
-    };
-    
-    return `
-      <div style="display: flex; gap: 6px; margin: 8px 0 4px 0; flex-wrap: wrap;">
-        ${tags.map(tagId => {
-          const tag = tagMap[tagId];
-          if (!tag) return '';
-          return `
-            <span style="display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; 
-                         background: linear-gradient(135deg, #fef3c7, #fed7aa); 
-                         border: 1px solid #f59e0b; border-radius: 12px; 
-                         font-size: 0.75rem; color: #92400e; font-weight: 500;">
-              <span>${tag.icon}</span>
-              <span>${tag.label}</span>
-            </span>
-          `;
-        }).join('')}
-      </div>
-    `;
-  }
-
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      init().catch((err) => console.error('Init error', err));
-    });
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    init().catch((err) => console.error('Init error', err));
+    init();
   }
 })();

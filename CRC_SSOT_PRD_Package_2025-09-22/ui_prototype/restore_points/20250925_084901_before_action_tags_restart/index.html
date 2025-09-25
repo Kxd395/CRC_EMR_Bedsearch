@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRC SSOT Running Note + Facility Finder Prototype</title>
-  <link rel="stylesheet" href="/src/styles/main.css">
 </head>
 <body>
   <div class="app-shell">
@@ -1078,32 +1077,13 @@
         <label>Summary
           <input type="text" id="popoverSummary" placeholder="One-line summary">
         </label>
-        
-        <!-- Simple Action Tags Section -->
-        <div style="margin: 16px 0; padding: 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Action Tags</label>
-          <div id="actionTagsContainer">
-            <p style="color: #64748b; font-size: 0.875rem; margin: 0;">Click checkboxes to add/remove action items:</p>
-            <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="waiting_transport"> 🚐 Waiting on Transport
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="schedule_transport"> 📅 Schedule Transport
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="contact_patient"> 📞 Contact Patient
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="verify_insurance"> 💳 Verify Insurance
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="send_packet"> 📦 Send Packet
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="follow_up_call"> ☎️ Follow-up Call
-              </label>
-            </div>
+        <div class="action-tags-section">
+          <label>Action Tags</label>
+          <div class="action-tags-selector" id="actionTagsSelector">
+            <!-- Action tags will be populated by JavaScript -->
+          </div>
+          <div class="action-tags-current" id="actionTagsCurrent">
+            <!-- Current tags will be displayed here -->
           </div>
         </div>
       </div>

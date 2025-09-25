@@ -61,7 +61,6 @@ export const newPatientScenarios = [
         summary: 'Bed confirmed, transport scheduled.',
         assignedTo: 'mlee',
         timeBucket: 'today',
-        actionTags: ['waiting_transport', 'verify_insurance'],
         // Complete event timeline (updateCard.md spec)
         events: [
           {
@@ -169,7 +168,6 @@ export const newPatientScenarios = [
         summary: 'Full census, recheck at 14:00.',
         assignedTo: 'cchen',
         timeBucket: 'today',
-        actionTags: ['schedule_transport', 'follow_up_call'],
         // Event timeline data (updateCard.md spec)
         events: [
           {
