@@ -2037,9 +2037,10 @@ textarea {
 
 .patient-list-filters {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-end;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .filter-chips {
@@ -2106,6 +2107,43 @@ textarea {
   padding: 12px 16px;
   border-bottom: 2px solid var(--border);
   white-space: nowrap;
+}
+
+/* Sortable table headers */
+.patient-list-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.patient-list-table th.sortable:hover {
+  background: #f1f5f9;
+}
+
+.patient-list-table th.sortable .sort-indicator {
+  margin-left: 8px;
+  opacity: 0.4;
+  font-size: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.patient-list-table th.sortable:hover .sort-indicator {
+  opacity: 0.8;
+}
+
+.patient-list-table th.sortable .sort-indicator:before {
+  content: "↕";
+}
+
+.patient-list-table th.sortable.sort-asc .sort-indicator:before {
+  content: "↑";
+  opacity: 1;
+}
+
+.patient-list-table th.sortable.sort-desc .sort-indicator:before {
+  content: "↓";
+  opacity: 1;
 }
 
 .patient-list-table td {
@@ -2371,12 +2409,20 @@ textarea {
     padding: 8px 12px;
   }
   
+  .patient-list-filters {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
   .filter-chips {
     flex-wrap: wrap;
+    justify-content: flex-start;
   }
   
   .filter-dropdowns {
     flex-direction: column;
+    gap: 8px;
   }
 }
 

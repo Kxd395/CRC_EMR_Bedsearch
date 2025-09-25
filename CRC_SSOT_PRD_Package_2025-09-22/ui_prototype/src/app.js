@@ -31,6 +31,26 @@ import { newPatientScenarios } from './data/newPatientScenarios.js';
     { value: 'DetoxOnly', label: 'Detox Only (non-maintenance)' }
   ];
 
+  const commitmentOptions = [
+    { value: '', label: 'Select commitment status' },
+    { value: 'Voluntary', label: 'Voluntary' },
+    { value: '302Hold', label: '302 Hold' },
+    { value: '201Hold', label: '201 Hold' },
+    { value: 'CourtOrdered', label: 'Court Ordered' },
+    { value: 'None', label: 'No commitment' }
+  ];
+
+  const acuityOptions = [
+    { value: '', label: 'Select medical acuity' },
+    { value: 'Medically Monitored', label: 'Medically Monitored' },
+    { value: 'Medically Managed', label: 'Medically Managed' },
+    { value: 'High-Intensity Residential', label: 'High-Intensity Residential' },
+    { value: 'Acute Psychiatric', label: 'Acute Psychiatric' },
+    { value: 'Routine', label: 'Routine' },
+    { value: 'StepUp', label: 'Step Up' },
+    { value: 'Secured', label: 'Secured' }
+  ];
+
   const canonicalStatusPalette = {
     Waiting: {
       label: 'Waiting / Sent',
@@ -374,7 +394,9 @@ function loadStoredPanelVisibility() {
     patientListFilters: {
       chip: 'all',
       status: '',
-      assigned: ''
+      assigned: '',
+      sortBy: '',
+      sortDir: 'asc'
     },
     session: {
       quickNotes: {},
@@ -467,6 +489,18 @@ function loadStoredPanelVisibility() {
 
     if (dom.matNeeds) {
       dom.matNeeds.innerHTML = matOptions
+        .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
+        .join('');
+    }
+
+    if (dom.threeOhTwo) {
+      dom.threeOhTwo.innerHTML = commitmentOptions
+        .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
+        .join('');
+    }
+
+    if (dom.acuity) {
+      dom.acuity.innerHTML = acuityOptions
         .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
         .join('');
     }
@@ -965,6 +999,28 @@ function loadStoredPanelVisibility() {
     });
   }
 
+  function sortPatientListRows(rows) {
+    if (!state.patientListFilters.sortBy) return rows;
+    
+    const sortBy = state.patientListFilters.sortBy;
+    const sortDir = state.patientListFilters.sortDir;
+    
+    return [...rows].sort((a, b) => {
+      let aVal = a[sortBy] || '';
+      let bVal = b[sortBy] || '';
+      
+      // Handle different data types
+      if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+      if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+      
+      let result = 0;
+      if (aVal < bVal) result = -1;
+      else if (aVal > bVal) result = 1;
+      
+      return sortDir === 'desc' ? -result : result;
+    });
+  }
+
   function renderPatientList() {
     if (!dom.patientListBody) return;
     const overrideRows = Array.isArray(patientListOverrides) && patientListOverrides.length
@@ -974,13 +1030,14 @@ function loadStoredPanelVisibility() {
     const sourceRows = overrideRows || fallbackRows;
 
     const filtered = applyPatientListFilters(sourceRows);
+    const sorted = sortPatientListRows(filtered);
 
-    if (!filtered.length) {
+    if (!sorted.length) {
       dom.patientListBody.innerHTML = `<tr><td colspan="8" class="hint">No patients match the current filters.</td></tr>`;
       return;
     }
 
-    dom.patientListBody.innerHTML = filtered
+    dom.patientListBody.innerHTML = sorted
       .map((row) => {
         const key = normalizeStatusKey(row.statusKey || row.statusLabel || 'Searching');
         const display = formatStatusDisplay(key);
@@ -2447,7 +2504,10 @@ function loadStoredPanelVisibility() {
     if (dom.patientListBody) {
       const patientCard = findAncestor(dom.patientListBody, '.card');
       if (patientCard) {
-        patientChipContainer = patientCard.querySelector('.filter-chips');
+        const patientHeader = patientCard.querySelector('.patient-list-header');
+        if (patientHeader) {
+          patientChipContainer = patientHeader.querySelector('.filter-chips');
+        }
       }
     }
 
@@ -2495,6 +2555,33 @@ function loadStoredPanelVisibility() {
       dom.assignedFilter.addEventListener('change', (event) => {
         state.patientListFilters.assigned = event.target.value;
         renderPatientList();
+      });
+    }
+
+    // Setup table header sorting
+    const patientListTable = document.getElementById('patientListTable');
+    if (patientListTable) {
+      const sortableHeaders = patientListTable.querySelectorAll('th.sortable');
+      sortableHeaders.forEach((header) => {
+        header.addEventListener('click', () => {
+          const sortBy = header.dataset.sort;
+          
+          // Toggle sort direction if clicking the same column
+          if (state.patientListFilters.sortBy === sortBy) {
+            state.patientListFilters.sortDir = state.patientListFilters.sortDir === 'asc' ? 'desc' : 'asc';
+          } else {
+            state.patientListFilters.sortBy = sortBy;
+            state.patientListFilters.sortDir = 'asc';
+          }
+          
+          // Update header visual indicators
+          sortableHeaders.forEach((h) => {
+            h.classList.remove('sort-asc', 'sort-desc');
+          });
+          header.classList.add(state.patientListFilters.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+          
+          renderPatientList();
+        });
       });
     }
   }

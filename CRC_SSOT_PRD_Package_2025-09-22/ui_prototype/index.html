@@ -746,12 +746,16 @@
               <div class="filter-dropdowns">
                 <select id="statusFilter" class="filter-select">
                   <option value="">All Statuses</option>
-                  <option value="accepted">Accepted</option>
-                  <option value="pending">Pending</option>
-                  <option value="waiting">Waiting Transport</option>
-                  <option value="nobeds">No Beds</option>
-                  <option value="denied">Denied</option>
-                  <option value="searching">Searching</option>
+                  <option value="Accepted">Accepted</option>
+                  <option value="PendingReview">Pending Review</option>
+                  <option value="WaitingTransport">Waiting Transport</option>
+                  <option value="NoBeds">No Beds</option>
+                  <option value="Denied">Denied</option>
+                  <option value="Searching">Searching</option>
+                  <option value="PacketSent">Packet Sent</option>
+                  <option value="Canceled">Canceled</option>
+                  <option value="Expired">Expired</option>
+                  <option value="ReassessRequired">Reassess Required</option>
                 </select>
                 <select id="assignedFilter" class="filter-select">
                   <option value="">All Staff</option>
@@ -767,14 +771,14 @@
             <table class="patient-list-table" id="patientListTable">
               <thead>
                 <tr>
-                  <th class="col-patient">Patient</th>
-                  <th class="col-placement">Placement</th>
-                  <th class="col-mat">MAT</th>
-                  <th class="col-status">Status</th>
-                  <th class="col-transport">Transport</th>
-                  <th class="col-assigned">Assigned</th>
-                  <th class="col-lastupdate">Last Update</th>
-                  <th class="col-reassess">Reassess</th>
+                  <th class="col-patient sortable" data-sort="name">Patient <span class="sort-indicator"></span></th>
+                  <th class="col-placement sortable" data-sort="placement">Placement <span class="sort-indicator"></span></th>
+                  <th class="col-mat sortable" data-sort="mat">MAT <span class="sort-indicator"></span></th>
+                  <th class="col-status sortable" data-sort="statusLabel">Status <span class="sort-indicator"></span></th>
+                  <th class="col-transport sortable" data-sort="transport">Transport <span class="sort-indicator"></span></th>
+                  <th class="col-assigned sortable" data-sort="assignedDisplay">Assigned <span class="sort-indicator"></span></th>
+                  <th class="col-lastupdate sortable" data-sort="lastUpdate">Last Update <span class="sort-indicator"></span></th>
+                  <th class="col-reassess sortable" data-sort="reassess">Reassess <span class="sort-indicator"></span></th>
                 </tr>
               </thead>
               <tbody id="patientListBody">
