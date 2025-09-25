@@ -4,6 +4,8 @@ A modernized Vite-powered frontend prototype for the CRC SSOT running note and f
 
 ## Getting Started
 
+⚠️ **Important:** This project uses ES6 modules and **requires Vite** to run. Do not use `python -m http.server` or similar - it won't work.
+
 ```bash
 npm install
 npm run dev
@@ -21,7 +23,7 @@ The development server uses Vite and hot module replacement. Visit the URL print
 
 ## Project Structure
 
-```
+```text
 ui_prototype/
 ├── netlify.toml           # Netlify deploy configuration (builds via Vite)
 ├── package.json           # Project metadata and npm scripts
