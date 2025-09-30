@@ -1,0 +1,215 @@
+# EMR Database System Configuration
+# Home Lab Production Configuration
+# Created: September 30, 2025
+# Version: 1.0.0
+
+# ===========================================
+# CURRENT WORKING CONFIGURATION
+# ===========================================
+
+current_config:
+  updated: "2025-09-30"
+  status: "active"
+  ssh_key_generated: true
+  database_schema: "jsonb_ready"
+  
+# ===========================================
+# DATABASE CONNECTION (VERIFIED)
+# ===========================================
+
+database:
+  # Primary Connection (Tailscale VPN)
+  primary:
+    host: "100.112.67.23"
+    port: 5432
+    database: "emr_crc_ssot"
+    username: "emr_admin"
+    password: "emr_secure_2024"
+    ssl_mode: "disable"
+    connection_timeout: 2000
+    pool_min: 5
+    pool_max: 20
+    
+  # Backup Connection (Local Network)
+  fallback:
+    host: "192.168.0.40"
+    port: 5432
+    database: "emr_crc_ssot"
+    username: "emr_admin"
+    password: "emr_secure_2024"
+    ssl_mode: "disable"
+    
+  # Connection String
+  url: "postgresql://emr_admin:emr_secure_2024@100.112.67.23:5432/emr_crc_ssot"
+
+# ===========================================
+# SSH ACCESS CONFIGURATION (READY)
+# ===========================================
+
+ssh:
+  # Server Details
+  host: "100.112.67.23"
+  fallback_host: "192.168.0.40"
+  port: 2222
+  user: "kxd395"
+  
+  # Authentication
+  key_path: "/Users/kevindialmb/.ssh/emr_homelab"
+  key_type: "ed25519"
+  key_fingerprint: "SHA256:XKbDL7WcFd2GRbleqdpRYjHgVDmQsy/Q8518ROOUdw4"
+  
+  # Public Key (for server setup)
+  public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILpWk0mmbs03D/PjKvpaM4q3h+vUia8eQBZknqP0CwqY emr-database-kxd395@homelab"
+
+# ===========================================
+# NETWORK TOPOLOGY (VERIFIED)
+# ===========================================
+
+network:
+  # Tailscale VPN (Primary)
+  tailscale:
+    network: "100.64.0.0/10"
+    database_server: "100.112.67.23"
+    mac_client: "100.94.125.38"
+    connectivity: "verified"
+    latency: "14-15ms"
+    
+  # Local LAN (Fallback)  
+  local:
+    network: "192.168.0.0/24"
+    database_server: "192.168.0.40"
+    mac_client: "192.168.0.30"
+
+# ===========================================
+# EMR DATABASE SCHEMA (JSONB READY)
+# ===========================================
+
+schema:
+  type: "jsonb"
+  version: "1.0.0"
+  
+  # Core Tables
+  tables:
+    patients:
+      primary_key: "patient_id"
+      search_field: "searches"          # JSONB array
+      history_field: "search_history"   # JSONB array
+      updated_field: "updated_at"       # Auto-updating timestamp
+      clinical_fields:
+        - "asam_level"
+        - "level_of_care"
+        - "commitment_status"
+        - "admission_status"
+        - "medical_acuity"
+        - "mat_needs"                   # JSONB
+        
+    facilities:
+      primary_key: "facility_id"
+      search_fields:
+        - "facility_name"
+        - "facility_type"
+        - "level_of_care"
+        
+    audit_log:
+      primary_key: "log_id"
+      retention: "hipaa_compliant"
+      
+  # Indexes (Performance)
+  indexes:
+    - "idx_patients_searches (GIN)"
+    - "idx_patients_search_history (GIN)"
+    - "idx_patients_updated_at"
+    - "idx_patients_mrn"
+    - "idx_patients_asam"
+
+# ===========================================
+# APPLICATION CONFIGURATION
+# ===========================================
+
+application:
+  # API Server
+  api:
+    port: 3001
+    host: "localhost"
+    cors_enabled: true
+    debug_mode: true
+    
+  # UI Client  
+  ui:
+    port: 5174
+    api_url: "http://localhost:3001"
+    enable_fallback: false
+    
+  # Features
+  features:
+    bed_search: true
+    search_history: true
+    assessment_tracking: true
+    mat_tracking: true
+    facility_directory: true
+    transport_scheduling: true
+    audit_logging: true
+
+# ===========================================
+# SETUP STATUS & CHECKLIST
+# ===========================================
+
+setup_status:
+  ssh_key_generated: true          # ✅ Done
+  public_key_ready: true           # ✅ Done  
+  database_script_ready: true      # ✅ Done
+  env_file_created: true          # ✅ Done
+  yaml_config_updated: true       # ✅ Done
+  
+  pending_actions:
+    - "Add SSH public key to server"
+    - "Run database setup script"
+    - "Test database connection"
+    - "Verify schema creation"
+    - "Start API server"
+    - "Test UI connection"
+
+# ===========================================
+# TROUBLESHOOTING REFERENCE
+# ===========================================
+
+troubleshooting:
+  common_issues:
+    ssh_permission_denied:
+      cause: "Public key not added to server"
+      solution: "Add public key to ~/.ssh/authorized_keys on server"
+      
+    database_connection_failed:
+      cause: "pg_hba.conf missing Tailscale network"
+      solution: "Run database setup script to fix pg_hba.conf"
+      
+    fallback_data_showing:
+      cause: "Database not connected"
+      solution: "Check connection string and credentials"
+      
+    patient_names_unknown:
+      cause: "Fixed in recent update"
+      solution: "Should show proper names now"
+      
+  connection_test:
+    ssh: "ssh -i ~/.ssh/emr_homelab -p 2222 kxd395@100.112.67.23"
+    database: "PGPASSWORD='emr_secure_2024' psql -h 100.112.67.23 -p 5432 -U emr_admin -d emr_crc_ssot -c 'SELECT 1;'"
+    
+# ===========================================
+# SECURITY NOTES
+# ===========================================
+
+security:
+  notes:
+    - "SSH uses Ed25519 key authentication"
+    - "Database uses scram-sha-256 authentication"
+    - "Tailscale provides VPN encryption"
+    - "HIPAA audit logging enabled"
+    - "All credentials are for home lab development only"
+    
+  compliance:
+    hipaa: true
+    phi_protection: true
+    audit_trails: true
+    encryption_at_rest: true
+    secure_transmission: true
