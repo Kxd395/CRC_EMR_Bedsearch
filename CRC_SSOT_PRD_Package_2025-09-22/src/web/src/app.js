@@ -592,6 +592,54 @@ function loadStoredPanelVisibility() {
   }
 
   /**
+   * Save assessment fields to database
+   * Called when user changes ASAM, Acuity, MAT Needs, or Commitment Status
+   */
+  async function saveAssessmentFields() {
+    console.log('%c💾 SAVING ASSESSMENT FIELDS', 'color: blue; font-weight: bold');
+    
+    const patient = getCurrentPatient();
+    if (!patient) {
+      console.error('❌ No patient selected for assessment save');
+      return;
+    }
+    
+    // Gather current field values from the DOM
+    const assessmentData = {
+      asamLevel: dom.asamField?.value || null,
+      medicalAcuity: dom.acuity?.value || null,
+      matNeeds: dom.matNeeds?.value || null,
+      commitmentStatus: dom.threeOhTwo?.value || null
+    };
+    
+    console.log('📊 Assessment data to save:', assessmentData);
+    
+    // Update patient object with new assessment values
+    if (!patient.note) {
+      patient.note = {};
+    }
+    
+    // Update note fields (for static patient compatibility)
+    patient.note.asam = assessmentData.asamLevel;
+    patient.note.acuity = assessmentData.medicalAcuity;
+    patient.note.matNeeds = assessmentData.matNeeds;
+    patient.note.commitment = assessmentData.commitmentStatus;
+    
+    // Also set top-level fields (for database transformation)
+    patient.medicalAcuity = assessmentData.medicalAcuity;
+    patient.matNeeds = assessmentData.matNeeds;
+    patient.commitmentStatus = assessmentData.commitmentStatus;
+    
+    try {
+      // Save to database using existing persistence layer
+      await savePatientToDatabase(patient);
+      console.log('✅ Assessment saved successfully');
+    } catch (error) {
+      console.error('❌ Failed to save assessment:', error);
+    }
+  }
+
+  /**
    * Load assessment data for a patient from the API
    */
   async function loadPatientAssessment(patientId) {
@@ -4989,10 +5037,48 @@ Can I get a ticket/reference number and confirm the best callback/fax?"`;
     });
   }
 
+  /**
+   * Setup save handlers for assessment fields
+   * Saves to database when user changes ASAM, Acuity, MAT Needs, or Commitment Status
+   */
+  function setupAssessmentSaveHandlers() {
+    const assessmentFields = [
+      { field: dom.asamField, name: 'ASAM Level' },
+      { field: dom.matNeeds, name: 'MAT Needs' },
+      { field: dom.threeOhTwo, name: 'Commitment Status' },
+      { field: dom.acuity, name: 'Medical Acuity' }
+    ];
+    
+    assessmentFields.forEach(({ field, name }) => {
+      if (!field) {
+        console.warn(`⚠️ Assessment field not found: ${name}`);
+        return;
+      }
+      
+      // Save on change (dropdown selection)
+      field.addEventListener('change', async () => {
+        console.log(`%c🎨 ASSESSMENT CHANGE: ${name} = "${field.value}"`, 'color: purple; font-weight: bold');
+        await saveAssessmentFields();
+      });
+      
+      // Also save on blur (when user leaves field) as fallback
+      field.addEventListener('blur', async () => {
+        if (userIsEditingAssessment) {
+          console.log(`📝 Assessment field blurred: ${name}`);
+          await saveAssessmentFields();
+          userIsEditingAssessment = false;
+        }
+      });
+    });
+    
+    console.log('✅ Assessment save handlers configured');
+  }
+
   async function init() {
     cacheDom();
     populateStaticSelects();
     setupAssessmentEditTracking(); // Track when user edits assessment fields
+    setupAssessmentSaveHandlers(); // NEW: Save assessment fields to database
     
     // 🔥 CRITICAL: Load patients from database FIRST
     console.log('🚀 Initializing application with database-first architecture...');
