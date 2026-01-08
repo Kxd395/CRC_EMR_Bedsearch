@@ -1,8 +1,0 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="2.614214">
-<testsuite name="e2e/emr-core-functionality.spec.js" timestamp="2025-09-29T17:19:05.211Z" hostname="chromium" tests="1" failures="0" skipped="1" time="1.21" errors="0">
-<testcase name="CRC SSOT EMR – Core Functionality › should load EMR interface with all core components" classname="e2e/emr-core-functionality.spec.js" time="1.21">
-<skipped>
-</skipped>
-</testcase>
-</testsuite>
-</testsuites>

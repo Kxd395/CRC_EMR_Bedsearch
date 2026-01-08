@@ -1,0 +1,140 @@
+# EMR CRC SSOT Security Scan Report
+Generated: Mon Sep 29 15:14:29 EDT 2025
+
+## Summary
+- **CRITICAL**: `./remote_db_migration.sql:2` - Hardcoded IP address detected
+  - Line: -- Run this on your remote PostgreSQL server: 100.112.67.23
+- **MEDIUM**: `./archive/old_versions/loc_master.json:210` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/loc_master.json:211` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/loc_master.json:401` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/loc_master.json:494` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/loc_master.json:609` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/CRC_SearchWorkflow_Additions_v2.2/src/components/SearchMultiAddModal.tsx:6` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/CRC_SearchWorkflow_Additions_v2.2/src/data/searchList.sample.json:14` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:21` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:22` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:39` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:40` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:57` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:59` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:74` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:76` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:91` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:93` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:108` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:109` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:111` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:126` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:128` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:143` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:145` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:147` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:148` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:167` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:169` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:171` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:184` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:186` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:201` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:202` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:219` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:221` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:238` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:239` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:258` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:260` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:262` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:277` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:278` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:281` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:293` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:295` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:296` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:311` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:313` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:328` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:330` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:332` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:345` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:362` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:379` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:396` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:398` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:413` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:415` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:430` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/inpatient_psych_hospitals_philadelphia.json:432` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/faciliotiesList.json:22` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/faciliotiesList.json:77` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/faciliotiesList.json:412` - Potential hardcoded phone number
+  - Use test data for development
+- **MEDIUM**: `./archive/old_versions/faciliotiesList.json:467` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/faciliotiesList.json:499` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/faciliotiesList.json:514` - Potential hardcoded email address
+  - Consider using environment variables
+- **MEDIUM**: `./archive/old_versions/CRC_PRD_v2_PA_Addendum/18a_AUTH_REQUEST.schema.json:2` - Hardcoded URL detected
+  - Consider using environment variables

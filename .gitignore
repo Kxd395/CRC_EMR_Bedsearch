@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.secrets
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Cache
+.cache/
+.vite/
+.netlify/
+
+# Test
+coverage/
+.nyc_output/
+
+# Archive (large files, not for CI)
+_archive/
+
+# Misc
+*.bak
+*.tmp
+.plan
