@@ -1,0 +1,23 @@
+{
+  "files.associations": {
+    ".env.*": "dotenv",
+    "*.env": "dotenv"
+  },
+  "files.exclude": {
+    "**/.env": true,
+    "**/node_modules": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.env": true,
+    "**/dist": true,
+    "**/coverage": true
+  },
+  "eslint.options": {
+    "configFile": ".eslintrc.security.json"
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ]
+}

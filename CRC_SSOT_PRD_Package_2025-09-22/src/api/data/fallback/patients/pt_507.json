@@ -1,0 +1,20 @@
+{
+  "id": "pt_507",
+  "first_name": "Lila",
+  "last_name": "Johnson",
+  "date_of_birth": "1990-01-01T05:00:00.000Z",
+  "mrn": "2025507",
+  "admission_status": "Voluntary",
+  "asam_level": "3.5",
+  "level_of_care": "High-Intensity Residential",
+  "commitment_status": "Voluntary",
+  "medical_acuity": "High-Intensity Residential",
+  "mat_needs": "MethadoneContinue",
+  "insurance_primary": "Unknown",
+  "insurance_secondary": "",
+  "emergency_contact_name": null,
+  "emergency_contact_phone": null,
+  "created_at": "2025-09-29T03:23:59.854Z",
+  "updated_at": "2025-09-29T03:23:59.854Z",
+  "last_sync": "2025-09-29T03:23:59.854Z"
+}

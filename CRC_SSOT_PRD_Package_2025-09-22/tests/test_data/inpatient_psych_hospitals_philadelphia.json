@@ -1,0 +1,439 @@
+{
+  "source": "CRC Facility Resource Guide July 2025 - Inpatient Psychiatric Hospitals (pages 4-5 images provided)",
+  "legend": {
+    "302_accepted": "Accepts 302 involuntary commitments",
+    "ambulatory_only": "Ambulatory patients only (no stretcher)",
+    "cbh_insurance": "Accepts CBH insurance",
+    "county_funding": "Accepts county funding",
+    "dual_diagnosis": "Treats co-occurring (dual diagnosis)",
+    "cvd_restrictions": "COVID-related restrictions or policies apply"
+  },
+  "hospitals": [
+    {
+      "id": 1,
+      "name": "Abington Hospital \u2013 Jefferson Health",
+      "system": "Jefferson Health",
+      "address": "1200 Old York Road",
+      "city": "Abington",
+      "state": "PA",
+      "zip": "19001",
+      "phones": [
+        "215-481-5450",
+        "215-481-2525"
+      ],
+      "fax": null,
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 2,
+      "name": "Einstein Medical Center",
+      "system": null,
+      "address": "5501 Old York Road",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19141",
+      "phones": [
+        "215-456-6740",
+        "215-456-6590"
+      ],
+      "fax": null,
+      "admissions": null,
+      "email": null,
+      "notes": "Psych units: T7 and L9.",
+      "badges": null
+    },
+    {
+      "id": 3,
+      "name": "Behavioral Wellness Center at Girard",
+      "system": null,
+      "address": "801 West Girard Ave.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19122",
+      "phones": [
+        "215-787-2196"
+      ],
+      "fax": "215-787-2038",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 4,
+      "name": "Belmont Behavioral Health",
+      "system": null,
+      "address": "4200 Monument Road",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19131",
+      "phones": [
+        "215-581-3980 ext. 1 (Inpatient)"
+      ],
+      "fax": "215-581-3890",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 5,
+      "name": "Brooke Glen Behavioral Hospital",
+      "system": null,
+      "address": "7170 Lafayette Ave.",
+      "city": "Fort Washington",
+      "state": "PA",
+      "zip": "19034",
+      "phones": [
+        "215-641-5400"
+      ],
+      "fax": "215-641-4629",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 6,
+      "name": "Bryn Mawr Hospital",
+      "system": "Main Line Health",
+      "address": null,
+      "city": null,
+      "state": "PA",
+      "zip": null,
+      "phones": [
+        "484-337-1895 (Transfer Center)",
+        "484-337-4280 (Psych Unit)"
+      ],
+      "fax": "484-337-5758",
+      "admissions": null,
+      "email": null,
+      "notes": "Requires medical clearance from ED; Philly 302 with CCBH only; CBH pending.",
+      "badges": null
+    },
+    {
+      "id": 7,
+      "name": "Chestnut Hill Hospital",
+      "system": "Tower & Temple Health",
+      "address": "8835 Germantown Ave",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19118",
+      "phones": [
+        "215-248-8117"
+      ],
+      "fax": "215-248-8942",
+      "admissions": null,
+      "email": null,
+      "notes": "No CVD; no Medical Assistance or VA Prime; accepts only 201 commitments.",
+      "badges": null
+    },
+    {
+      "id": 8,
+      "name": "Crozer-Chester Medical Center",
+      "system": "Crozer Health",
+      "address": "One Medical Center Blvd",
+      "city": "Upland",
+      "state": "PA",
+      "zip": "19013",
+      "phones": [
+        "877-243-8233"
+      ],
+      "fax": "610-447-2720",
+      "admissions": {
+        "phone": "610-447-7600",
+        "fax": "610-447-7606"
+      },
+      "email": null,
+      "notes": "Ambulatory only; no CVD; no 302; accepts CCBH, CBH, Magellan. Call before faxing.",
+      "badges": {
+        "ambulatory_only": true,
+        "302_accepted": false,
+        "cvd_restrictions": true
+      }
+    },
+    {
+      "id": 9,
+      "name": "Eagleville Hospital",
+      "system": null,
+      "address": "100 Eagleville Rd",
+      "city": "Norristown",
+      "state": "PA",
+      "zip": "19403",
+      "phones": [
+        "610-539-6000"
+      ],
+      "fax": "610-539-7624",
+      "admissions": null,
+      "email": "admissions@eagleville.org",
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 10,
+      "name": "Fairmount Behavioral Health",
+      "system": null,
+      "address": "561 Fairthorne Ave.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19128",
+      "phones": [
+        "215-487-4100"
+      ],
+      "fax": "215-487-7396",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 11,
+      "name": "Foundations Behavioral Health",
+      "system": null,
+      "address": "833 E Butler Ave.",
+      "city": "Doylestown",
+      "state": "PA",
+      "zip": "18901",
+      "phones": [
+        "215-345-7151",
+        "215-345-0444"
+      ],
+      "fax": null,
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 12,
+      "name": "Friends Hospital",
+      "system": null,
+      "address": "4641 Roosevelt Blvd",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19124",
+      "phones": [
+        "215-831-6300"
+      ],
+      "fax": "215-831-2630",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 13,
+      "name": "Haven West Chester",
+      "system": null,
+      "address": null,
+      "city": "West Chester",
+      "state": "PA",
+      "zip": null,
+      "phones": null,
+      "fax": null,
+      "admissions": {
+        "phone": "484-835-2050",
+        "fax": "484-823-0987"
+      },
+      "email": null,
+      "notes": "Ambulatory only; no Philly 302; accepts CCBH, CBH, Magellan & others. Accepts CVD-positive patients with restrictions (no fever 24h, mask 5 days).",
+      "badges": {
+        "ambulatory_only": true,
+        "302_accepted": false,
+        "cvd_restrictions": true
+      }
+    },
+    {
+      "id": 14,
+      "name": "Haven Behavioral Hospital",
+      "system": null,
+      "address": "3300 Henry Ave.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19129",
+      "phones": [
+        "215-475-3400"
+      ],
+      "fax": "215-475-3402",
+      "admissions": null,
+      "email": "egibbs@havenllc.com",
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 15,
+      "name": "Holy Redeemer Hospital",
+      "system": null,
+      "address": "1648 Huntingdon Pk",
+      "city": "Meadowbrook",
+      "state": "PA",
+      "zip": "19046",
+      "phones": null,
+      "fax": null,
+      "admissions": {
+        "phone": "215-938-2861",
+        "fax": "215-938-2863"
+      },
+      "email": null,
+      "notes": "Behavioral Health Services: 215-914-4190; Senior Behavioral Health Unit: 215-938-2860.",
+      "badges": null
+    },
+    {
+      "id": 16,
+      "name": "Horsham Clinic",
+      "system": null,
+      "address": "722 Butler Pk",
+      "city": "Ambler",
+      "state": "PA",
+      "zip": "19002",
+      "phones": null,
+      "fax": "215-654-1148",
+      "admissions": {
+        "inpatient_admission_fax": "215-654-1148",
+        "partial_program_admission_fax": "215-643-6014"
+      },
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 17,
+      "name": "Hospital of the University of Pennsylvania \u2013 HUP Cedar Ave.",
+      "system": "Penn Medicine",
+      "address": "501 S 54th St.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19143",
+      "phones": [
+        "215-748-9525"
+      ],
+      "fax": "215-748-9536",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 18,
+      "name": "Malvern Behavioral Health",
+      "system": null,
+      "address": "1930 South Broad St.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19145",
+      "phones": [
+        "610-480-8919"
+      ],
+      "fax": "484-329-6299",
+      "admissions": null,
+      "email": "MTSouthPhila_Admissions@malverntreatment.com",
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 19,
+      "name": "Pennsylvania Hospital",
+      "system": "Penn Medicine",
+      "address": "800 Spruce St.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19107",
+      "phones": [
+        "215-829-3000"
+      ],
+      "fax": null,
+      "admissions": null,
+      "email": null,
+      "notes": "Fax not provided.",
+      "badges": null
+    },
+    {
+      "id": 20,
+      "name": "Prime Healthcare Lower Bucks",
+      "system": "Prime Healthcare",
+      "address": "501 Bath Road",
+      "city": "Bristol",
+      "state": "PA",
+      "zip": "19007",
+      "phones": [
+        "215-785-9200"
+      ],
+      "fax": null,
+      "admissions": null,
+      "email": null,
+      "notes": "Fax not provided.",
+      "badges": null
+    },
+    {
+      "id": 21,
+      "name": "Prime Healthcare Roxborough Hospital",
+      "system": "Prime Healthcare",
+      "address": "5800 Ridge Ave.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19128",
+      "phones": [
+        "215-483-9900"
+      ],
+      "fax": null,
+      "admissions": null,
+      "email": null,
+      "notes": "Fax not provided.",
+      "badges": null
+    },
+    {
+      "id": 22,
+      "name": "Temple University Hospital \u2013 Episcopal Campus",
+      "system": "Temple Health",
+      "address": "100 East Lehigh Ave.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19125",
+      "phones": [
+        "215-707-1200"
+      ],
+      "fax": "215-707-2577",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 23,
+      "name": "Thomas Jefferson University Hospital",
+      "system": "Jefferson Health",
+      "address": "833 Chestnut St.",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": "19107",
+      "phones": [
+        "215-890-6277"
+      ],
+      "fax": "215-503-2823",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    },
+    {
+      "id": 24,
+      "name": "Tower Behavioral Health",
+      "system": null,
+      "address": "201 Wellness Way",
+      "city": "Reading",
+      "state": "PA",
+      "zip": "19605",
+      "phones": [
+        "484-659-2300"
+      ],
+      "fax": "610-374-1619",
+      "admissions": null,
+      "email": null,
+      "notes": null,
+      "badges": null
+    }
+  ]
+}

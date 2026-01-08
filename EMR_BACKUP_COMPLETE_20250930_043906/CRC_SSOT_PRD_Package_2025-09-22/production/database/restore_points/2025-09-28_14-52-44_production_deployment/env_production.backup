@@ -1,0 +1,44 @@
+# EMR Database Configuration via Tailscale
+# Generated: Sun Sep 28 14:11:24 EDT 2025
+# SECURITY: Healthcare data - HIPAA compliant networking
+
+# Database Connection (Tailscale-secured)
+EMR_DATABASE_URL=postgresql://emr_admin:EMR_Secure_2025_1eNgLHMe@100.112.67.23:5432/emr_placement_ssot
+DB_TYPE=postgresql
+DB_HOST=100.112.67.23
+DB_PORT=5432
+DB_NAME=emr_placement_ssot
+DB_USER=emr_admin
+DB_PASS=EMR_Secure_2025_1eNgLHMe
+DB_SSL=prefer
+
+# Supabase Configuration (if using Supabase features)
+SUPABASE_PROJECT_URL=postgresql://100.112.67.23:5432
+SUPABASE_SERVICE_ROLE_KEY=emr_service_role_e45c9dcf246dc8d25777d574448d7bca44c36a389d8c86a6181e304f5d6b802c
+
+# Tailscale Network Information
+MAC_TAILSCALE_IP=100.94.125.38
+UBUNTU_TAILSCALE_IP=100.112.67.23
+
+# Security Configuration
+NODE_ENV=development
+LOG_LEVEL=info
+LOG_FILE=./logs/emr.log
+
+# Healthcare Security Settings
+HIPAA_COMPLIANT=true
+ENCRYPTION_AT_REST=true
+AUDIT_LOGGING=true
+SESSION_TIMEOUT=1800
+MAX_LOGIN_ATTEMPTS=3
+
+# API Configuration
+API_PORT=3002
+API_HOST=localhost
+CORS_ORIGIN=http://localhost:3000
+CORS_CREDENTIALS=true
+
+# JWT Configuration for EMR
+JWT_SECRET=Q0yQKCibPczGSl/1qOJ36cVKl4UrPUGp+utanaNa7wU=
+JWT_EXPIRY=30m
+REFRESH_TOKEN_EXPIRY=7d

@@ -1,0 +1,53 @@
+[
+  {
+    "timestamp": "2025-09-22T09:05:00-04:00",
+    "facility_id": "HOPERIDGE",
+    "facility_name": "Hope Ridge Recovery",
+    "action": "Call",
+    "outcome_status": "LeftVoicemail",
+    "reason_code": [
+      "NoAnswer"
+    ],
+    "channel": "phone",
+    "contact_value": "215-555-0199",
+    "note": "Left secure VM with intake RN, requested call back by 10:30.",
+    "user_id": "ML-7782",
+    "user_display": "Morgan Lee (CRC Technician)",
+    "next_action": "CallBack",
+    "next_at": "2025-09-22T10:30:00-04:00"
+  },
+  {
+    "timestamp": "2025-09-22T09:42:00-04:00",
+    "facility_id": "RIVERVIEW",
+    "facility_name": "Riverview Detox",
+    "action": "BedSearch",
+    "outcome_status": "PendingReview",
+    "reason_code": [
+      "AwaitingMedicalReview"
+    ],
+    "channel": "phone",
+    "contact_value": "267-555-0114",
+    "note": "Nurse requested faxed packet; will review in rounds at 11:00.",
+    "user_id": "KD-14753",
+    "user_display": "Kevin Dial (CRS)",
+    "next_action": "SendPacket",
+    "next_at": "2025-09-22T09:50:00-04:00"
+  },
+  {
+    "timestamp": "2025-09-22T10:02:00-04:00",
+    "facility_id": "CITY-ACUTE",
+    "facility_name": "City Acute BH",
+    "action": "Denial",
+    "outcome_status": "Denied",
+    "reason_code": [
+      "NoBedsSecureBH"
+    ],
+    "channel": "phone",
+    "contact_value": "215-555-0102",
+    "note": "Secure BH unit full; advised to check after 15:00.",
+    "user_id": "ML-7782",
+    "user_display": "Morgan Lee (CRC Technician)",
+    "next_action": "RecheckBeds",
+    "next_at": "2025-09-22T15:00:00-04:00"
+  }
+]

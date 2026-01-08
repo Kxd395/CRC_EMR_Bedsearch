@@ -1,0 +1,86 @@
+openapi: 3.0.3
+info:
+  title: EMR Patients API
+  version: 1.0.0
+paths:
+  /api/patients/{id}:
+    put:
+      summary: Upsert patient (with searches/search_history)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema: { type: string }
+        - in: header
+          name: If-Match
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientPayload'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PatientSummary' }
+        '201':
+          description: Created
+        '409':
+          description: Version conflict
+components:
+  schemas:
+    PatientPayload:
+      type: object
+      required: [id, searches]
+      properties:
+        id: { type: string }
+        firstName: { type: string }
+        lastName: { type: string }
+        mrn: { type: string }
+        asamLevel: { type: string }
+        levelOfCare: { type: string }
+        commitmentStatus: { type: string }
+        medicalAcuity: { type: string }
+        matNeeds: { type: object }
+        searches:
+          type: array
+          items: { $ref: '#/components/schemas/Search' }
+        searchHistory:
+          type: array
+          items: { $ref: '#/components/schemas/SearchHistory' }
+    Search:
+      type: object
+      required: [id, status]
+      properties:
+        id: { type: string }
+        facilityId: { type: string }
+        facilityName: { type: string }
+        status: { type: string }
+        summary: { type: string }
+        history:
+          type: array
+          items: { $ref: '#/components/schemas/SearchHistory' }
+        events:
+          type: array
+          items: { type: object }
+    SearchHistory:
+      type: object
+      properties:
+        ts: { type: string, format: date-time }
+        event: { type: string }
+        user: { type: string }
+        notes: { type: string }
+    PatientSummary:
+      type: object
+      properties:
+        id: { type: string }
+        version: { type: integer }
+        updatedAt: { type: string, format: date-time }

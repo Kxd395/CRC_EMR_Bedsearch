@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run model task",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/mcp-ts-api/src/runModel.ts",
+      "runtimeArgs": ["--loader", "ts-node/esm", "--no-warnings"],
+      "envFile": "${workspaceFolder}/mcp-ts-api/.env",
+      "args": ["Use search_docs with query 'codemode' and summarize to 2 sentences."]
+    }
+  ]
+}

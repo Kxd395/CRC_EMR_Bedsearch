@@ -1,0 +1,25 @@
+{
+  "name": "mcp-ts-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gen:bindings": "node --loader ts-node/esm --no-warnings src/generateBindings.ts",
+    "run:task": "node --loader ts-node/esm --no-warnings src/runModel.ts",
+    "smoke": "node --loader ts-node/esm --no-warnings src/tests/smoke.ts",
+    "verify": "npm run gen:bindings && npm run smoke && npx tsc --noEmit",
+    "guard:version": "node scripts/check-version-on-critical-change.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "openai": "^4.58.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
+}

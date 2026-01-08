@@ -1,8 +1,8 @@
 [build]
   # Directory that contains the deploy-ready HTML files
-  publish = "dist"
-  # Build optimized assets with Vite before deploy
-  command = "npm run build"
+  publish = "."
+  # No build command needed for static HTML
+  command = ""
 
 [[redirects]]
   # Handle any routing needs

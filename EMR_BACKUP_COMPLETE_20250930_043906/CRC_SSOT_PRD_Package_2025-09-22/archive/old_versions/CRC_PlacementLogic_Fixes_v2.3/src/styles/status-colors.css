@@ -1,0 +1,8 @@
+/* Status row tints */
+.st-accepted { background: #ecfdf5; }      /* green-50 */
+.st-pending  { background: #fffbeb; }      /* amber-50 */
+.st-denied   { background: #fef2f2; }      /* red-50 */
+.st-nobeds   { background: #f3f4f6; }      /* gray-100 */
+.st-searching{ background: #eef2ff; }      /* indigo-50 */
+.st-canceled { background: #f8fafc; }
+/* Provide typography/table styles as needed */

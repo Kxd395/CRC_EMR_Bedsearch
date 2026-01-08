@@ -1,0 +1,9 @@
+{
+  "name": "Database Test Patient",
+  "mrn": "DB_TEST_001",
+  "id": "mg4566yhoddc4jmf7",
+  "createdAt": "2025-09-28T20:17:59.225Z",
+  "updatedAt": "2025-09-28T20:17:59.225Z",
+  "lastSync": "2025-09-28T20:17:59.225Z",
+  "persistenceMethod": "fallback"
+}

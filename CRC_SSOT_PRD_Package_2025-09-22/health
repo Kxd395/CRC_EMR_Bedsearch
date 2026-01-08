@@ -1,0 +1,2 @@
+#!/bin/bash
+bash scripts/utilities/health-check.sh

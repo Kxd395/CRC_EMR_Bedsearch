@@ -1,0 +1,20 @@
+{
+  "id": "pt_515",
+  "first_name": "Alicia",
+  "last_name": "Bennett",
+  "date_of_birth": "1990-01-01T05:00:00.000Z",
+  "mrn": "2025515",
+  "admission_status": "302Hold",
+  "asam_level": "IP Psych",
+  "level_of_care": "Acute Psychiatric",
+  "commitment_status": "302Hold",
+  "medical_acuity": "Acute Psychiatric",
+  "mat_needs": "MethadoneContinue",
+  "insurance_primary": "Unknown",
+  "insurance_secondary": "",
+  "emergency_contact_name": null,
+  "emergency_contact_phone": null,
+  "created_at": "2025-09-29T03:24:00.715Z",
+  "updated_at": "2025-09-29T03:24:00.715Z",
+  "last_sync": "2025-09-29T03:24:00.715Z"
+}

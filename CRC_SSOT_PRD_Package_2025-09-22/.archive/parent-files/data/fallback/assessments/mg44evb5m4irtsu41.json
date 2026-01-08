@@ -1,0 +1,10 @@
+{
+  "patientId": "test-patient-1",
+  "assessmentType": "Initial",
+  "asamRecommendation": "3.5",
+  "notes": "Test assessment notes",
+  "id": "mg44evb5m4irtsu41",
+  "createdAt": "2025-09-28T19:56:44.417Z",
+  "updatedAt": "2025-09-28T19:56:44.417Z",
+  "persistenceMethod": "fallback"
+}

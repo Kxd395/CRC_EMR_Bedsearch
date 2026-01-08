@@ -1,0 +1,182 @@
+{
+  "config": {
+    "configFile": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/playwright.config.js",
+    "rootDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "reports/results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "reports/results.xml"
+        }
+      ],
+      [
+        "line",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "mobile-safari",
+        "name": "mobile-safari",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "google-chrome",
+        "name": "google-chrome",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "epic-emr-chrome",
+        "name": "epic-emr-chrome",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "hipaa-compliance",
+        "name": "hipaa-compliance",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/tests/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.1",
+    "workers": 5,
+    "webServer": {
+      "command": "cd ../prototypes/ui_prototype && npx vite dev",
+      "port": 5173,
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+    }
+  ],
+  "stats": {
+    "startTime": "2025-09-30T16:56:08.333Z",
+    "duration": 13.599000000000046,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

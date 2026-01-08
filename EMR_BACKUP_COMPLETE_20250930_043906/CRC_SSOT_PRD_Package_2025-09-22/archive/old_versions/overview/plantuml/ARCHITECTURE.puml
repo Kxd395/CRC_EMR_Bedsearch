@@ -1,0 +1,94 @@
+@startuml ARCHITECTURE
+!theme plain
+skinparam backgroundColor white
+skinparam componentStyle uml2
+
+title EMR Bed-Search System Architecture
+
+package "User Interface" {
+  [Search Cards] as cards
+  [Event Forms] as forms
+  [Status Chips] as chips
+  [Action Menus] as menus
+  
+  cards --> forms : trigger events
+  forms --> chips : display facets
+  cards --> menus : context actions
+}
+
+package "API Layer" {
+  [POST /events] as postEvents
+  [GET /search] as getSearch
+  [PUT /search] as putSearch
+  [WebSocket/SSE] as websocket
+}
+
+package "Business Logic" {
+  [Event Validator] as validator
+  [Status Derivation Engine] as derivation
+  [Version Control] as version
+  
+  validator --> derivation : validated events
+  derivation --> version : status updates
+}
+
+package "Database Layer" {
+  database "PostgreSQL" {
+    [bed_search] as searchTable
+    [bed_search_event] as eventTable
+    [bed_search_note] as noteTable
+    [patient] as patientTable
+    [visit] as visitTable
+    [facility] as facilityTable
+    [user] as userTable
+  }
+  
+  searchTable ||--o{ eventTable : has events
+  searchTable }o--|| patientTable : belongs to
+  searchTable }o--|| facilityTable : targets
+  searchTable }o--|| visitTable : references FIN
+  eventTable }o--|| userTable : created by
+  noteTable }o--|| searchTable : annotates
+}
+
+package "File Storage" {
+  [Document Files] as files
+  [Backup Archives] as archives
+}
+
+' UI to API connections
+cards --> getSearch : fetch current state
+forms --> postEvents : submit events
+menus --> putSearch : update search
+
+' API to Business Logic connections
+postEvents --> validator : validate event
+getSearch --> derivation : compute status
+putSearch --> version : increment version
+
+' Business Logic to Database connections
+validator --> eventTable : insert event
+derivation --> searchTable : update status
+version --> searchTable : increment version
+
+' Database relationships
+searchTable --> eventTable : 1:N events
+eventTable --> userTable : created by
+searchTable --> patientTable : patient_id
+searchTable --> facilityTable : facility_id
+searchTable --> visitTable : FIN reference
+
+' WebSocket flow
+derivation --> websocket : status change
+websocket --> cards : real-time update
+
+' File connections
+searchTable --> files : document references
+eventTable --> archives : audit trail
+
+note right of searchTable : UNIQUE(facility_id, fin)\nWHERE archived_at IS NULL
+note right of eventTable : Append-only\nImmutable events
+note left of derivation : Deterministic status\nfrom event history
+note bottom of websocket : Real-time collaboration\nwithout polling
+
+@enduml

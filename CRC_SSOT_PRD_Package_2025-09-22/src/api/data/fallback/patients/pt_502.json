@@ -1,0 +1,20 @@
+{
+  "id": "pt_502",
+  "first_name": "Miguel",
+  "last_name": "Santos",
+  "date_of_birth": "1990-01-01T05:00:00.000Z",
+  "mrn": "2025502",
+  "admission_status": "Voluntary",
+  "asam_level": "3.5",
+  "level_of_care": "High-Intensity Residential",
+  "commitment_status": "Voluntary",
+  "medical_acuity": "High-Intensity Residential",
+  "mat_needs": "SuboxoneInduction",
+  "insurance_primary": "Unknown",
+  "insurance_secondary": "",
+  "emergency_contact_name": null,
+  "emergency_contact_phone": null,
+  "created_at": "2025-09-29T03:23:59.303Z",
+  "updated_at": "2025-09-29T03:23:59.303Z",
+  "last_sync": "2025-09-29T03:23:59.303Z"
+}

@@ -1,0 +1,229 @@
+{
+  "patient_id": 3,
+  "id": "pt_501",
+  "mrn": "2025501",
+  "first_name": "Dana",
+  "last_name": "Nguyen",
+  "date_of_birth": null,
+  "asam_level": "3.7WM",
+  "level_of_care": "Y",
+  "commitment_status": "302Hold",
+  "admission_status": "waiting_transport",
+  "medical_acuity": "Medically Monitored",
+  "mat_needs": {},
+  "insurance_primary": null,
+  "insurance_secondary": null,
+  "emergency_contact_name": null,
+  "emergency_contact_phone": null,
+  "searches": [
+    {
+      "id": "pt_501-01",
+      "events": [
+        {
+          "id": "evt_1727154000000_initial",
+          "ts": "2025-09-24T09:00:00Z",
+          "type": "call_outcome",
+          "payload": {
+            "outcome": "bed_available"
+          },
+          "user_id": "mlee",
+          "version": 1,
+          "search_id": "pt_501-01"
+        },
+        {
+          "id": "evt_1727154300000_docs",
+          "ts": "2025-09-24T09:05:00Z",
+          "type": "docs_sent",
+          "payload": {
+            "docs": [
+              "clinical_packet",
+              "tox_results"
+            ]
+          },
+          "user_id": "mlee",
+          "version": 2,
+          "search_id": "pt_501-01"
+        },
+        {
+          "id": "evt_1727157600000_accept",
+          "ts": "2025-09-24T10:00:00Z",
+          "type": "acceptance",
+          "payload": {
+            "hold_until": "2025-09-24T17:00:00Z"
+          },
+          "user_id": "eagleville_admin",
+          "version": 3,
+          "search_id": "pt_501-01"
+        },
+        {
+          "id": "evt_1727158500000_transport",
+          "ts": "2025-09-24T10:15:00Z",
+          "type": "transport_scheduled",
+          "payload": {
+            "pickup_at": "2025-09-24T16:30:00Z"
+          },
+          "user_id": "mlee",
+          "version": 4,
+          "search_id": "pt_501-01"
+        }
+      ],
+      "status": "Accepted",
+      "created": "09/24 09:00",
+      "history": [
+        {
+          "ts": "Sep 30, 02:10 PM",
+          "user": "Morgan Lee",
+          "action": "edit_info",
+          "message": "Bed confirmed, transport scheduled."
+        }
+      ],
+      "summary": "Bed confirmed, transport scheduled.",
+      "updated": "Sep 30, 02:10 PM",
+      "channels": [
+        "phone"
+      ],
+      "actionTags": [
+        "waiting_transport",
+        "verify_insurance"
+      ],
+      "assignedTo": "mlee",
+      "facilityId": "EAGLEVILLE",
+      "timeBucket": "today",
+      "facilityName": "Eagleville",
+      "accepted_by_name": "",
+      "status_reason_code": "ACCEPT_PHONE",
+      "accepted_bed_hold_until": ""
+    },
+    {
+      "id": "Spt_501-02",
+      "status": "Denied",
+      "created": "09/30 11:33",
+      "history": [
+        {
+          "ts": "Sep 30, 02:10 PM",
+          "user": "Morgan Lee",
+          "action": "edit_info",
+          "message": "New search added from facility directory."
+        }
+      ],
+      "summary": "New search added from facility directory.",
+      "updated": "Sep 30, 02:10 PM",
+      "channels": [
+        "fax"
+      ],
+      "assignedTo": "mlee",
+      "facilityId": "MALVERN_BH",
+      "timeBucket": "today",
+      "facilityName": "Malvern Behavioral Health",
+      "accepted_by_name": "",
+      "status_reason_code": "ACCEPT_PHONE",
+      "accepted_bed_hold_until": ""
+    },
+    {
+      "id": "Spt_501-03",
+      "status": "Searching",
+      "created": "09/30 11:33",
+      "summary": "New search added from facility directory.",
+      "updated": "09/30 11:33",
+      "channels": [
+        "fax"
+      ],
+      "assignedTo": "mlee",
+      "facilityId": "BEACON_POINT",
+      "timeBucket": "today",
+      "facilityName": "Beacon Point"
+    },
+    {
+      "id": "Spt_501-04",
+      "status": "Denied",
+      "created": "09/30 11:59",
+      "history": [
+        {
+          "ts": "Sep 30, 04:13 PM",
+          "user": "Morgan Lee",
+          "action": "edit_info",
+          "message": "New search added from facility directory."
+        }
+      ],
+      "summary": "New search added from facility directory.",
+      "updated": "Sep 30, 04:13 PM",
+      "channels": [
+        "fax"
+      ],
+      "assignedTo": "mlee",
+      "facilityId": "VALLEY_FORGE",
+      "timeBucket": "today",
+      "facilityName": "Valley Forge",
+      "accepted_by_name": "",
+      "status_reason_code": "ACCEPT_PHONE",
+      "accepted_bed_hold_until": ""
+    },
+    {
+      "id": "Spt_501-05",
+      "status": "Searching",
+      "created": "09/30 12:43",
+      "summary": "New search added from facility directory.",
+      "updated": "09/30 12:43",
+      "channels": [
+        "fax"
+      ],
+      "assignedTo": "mlee",
+      "facilityId": "FAIRMOUNT",
+      "timeBucket": "today",
+      "facilityName": "Fairmount"
+    }
+  ],
+  "search_history": [
+    {
+      "ts": "Sep 30, 04:13 PM",
+      "detail": "New search added from facility directory.",
+      "status": "Denied",
+      "facility": "Valley Forge"
+    },
+    {
+      "ts": "Sep 30, 02:10 PM",
+      "detail": "New search added from facility directory.",
+      "status": "Denied",
+      "facility": "Malvern Behavioral Health"
+    },
+    {
+      "ts": "Sep 30, 02:10 PM",
+      "detail": "Bed confirmed, transport scheduled.",
+      "status": "Accepted",
+      "facility": "Eagleville"
+    },
+    {
+      "ts": "09/30 12:43",
+      "detail": "Search initiated from facility directory.",
+      "status": "Searching",
+      "facility": "Fairmount"
+    },
+    {
+      "ts": "09/30 11:59",
+      "detail": "Search initiated from facility directory.",
+      "status": "Searching",
+      "facility": "Valley Forge"
+    },
+    {
+      "ts": "09/30 11:33",
+      "detail": "Search initiated from facility directory.",
+      "status": "Searching",
+      "facility": "Beacon Point"
+    },
+    {
+      "ts": "09/30 11:33",
+      "detail": "Search initiated from facility directory.",
+      "status": "Searching",
+      "facility": "Malvern Behavioral Health"
+    },
+    {
+      "ts": "09/24 10:15",
+      "detail": "Transport scheduled for 16:30.",
+      "status": "WaitingTransport",
+      "facility": "Eagleville"
+    }
+  ],
+  "created_at": "2025-09-30T15:33:18.276Z",
+  "updated_at": "2025-09-30T20:13:17.532Z",
+  "last_sync": "2025-09-30T20:13:17.439Z"
+}

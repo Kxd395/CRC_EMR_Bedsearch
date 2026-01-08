@@ -1,0 +1,96 @@
+{
+  "status": "success",
+  "timestamp": "2025-10-06T12:00:00Z",
+  "project": {
+    "name": "mcp-ts-api",
+    "location": "/Users/VScode_Projects/EMR/mcp-ts-api",
+    "approach": "TypeScript API over Classic MCP"
+  },
+  "filesCreated": [
+    "package.json",
+    "tsconfig.json",
+    ".env.example",
+    ".env",
+    "README.md",
+    "src/bindings.runtime.ts",
+    "src/generateBindings.ts",
+    "src/runModel.ts",
+    "src/wrapAndExecute.ts",
+    "src/tests/smoke.ts",
+    "src/schema.samples/tooling.schema.json",
+    ".vscode/tasks.json",
+    ".vscode/launch.json"
+  ],
+  "filesGenerated": [
+    "src/bindings.ts",
+    "src/bindings.d.ts",
+    "package-lock.json"
+  ],
+  "dependencies": {
+    "runtime": {
+      "dotenv": "16.4.5",
+      "openai": "4.58.1"
+    },
+    "dev": {
+      "@types/node": "20.12.7",
+      "ts-node": "10.9.2",
+      "typescript": "5.6.3"
+    },
+    "total": 59,
+    "vulnerabilities": 0
+  },
+  "systemTools": {
+    "deno": {
+      "version": "2.5.3",
+      "location": "/Users/kevindialmb/.deno/bin/deno",
+      "v8": "14.0.365.5-rusty",
+      "typescript": "5.9.2"
+    }
+  },
+  "generatedBindings": {
+    "schemaSource": "src/schema.samples/tooling.schema.json",
+    "toolCount": 2,
+    "tools": [
+      {
+        "name": "search_docs",
+        "description": "Full text search over local docs",
+        "signature": "search_docs(query: string): Promise<unknown>"
+      },
+      {
+        "name": "summarize",
+        "description": "Summarize text to N sentences",
+        "signature": "summarize(text: string, sentences?: number): Promise<unknown>"
+      }
+    ],
+    "outputFiles": [
+      "src/bindings.ts",
+      "src/bindings.d.ts"
+    ]
+  },
+  "smokeTest": {
+    "status": "ready",
+    "note": "Deno installed. Smoke test can run in demo mode (echoes calls without real MCP server)",
+    "command": "npm run smoke",
+    "requiresConfig": [
+      "OPENAI_API_KEY in .env for full model integration"
+    ]
+  },
+  "nextSteps": [
+    "Edit .env and set OPENAI_API_KEY",
+    "Run: npm run smoke (demo mode)",
+    "Connect to real MCP server or set MCP_HTTP_ENDPOINT",
+    "Run: npm run run:task -- 'your task description'",
+    "Use VS Code tasks (Cmd+Shift+P → Run Task)"
+  ],
+  "advantages": {
+    "vsClassicMCP": [
+      "Fewer round trips (1 program vs N tool calls)",
+      "Lower context bloat (final output only)",
+      "Stronger type safety (full TypeScript)",
+      "Better debugging (one program + stdout)",
+      "Reduced tool confusion (single API)",
+      "Tighter security (sandboxed execution)"
+    ]
+  },
+  "confidence": "94%"
+}

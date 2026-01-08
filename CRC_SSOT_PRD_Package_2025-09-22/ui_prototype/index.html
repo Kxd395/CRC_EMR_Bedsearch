@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRC SSOT Running Note + Facility Finder Prototype</title>
-  <link rel="stylesheet" href="/src/styles/main.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app-shell">
@@ -86,11 +86,11 @@
           <div class="assessment-grid">
             <label>
               LOC / ASAM level
-              <select id="asamField"></select>
+              <input id="asamField" type="text" value="" readonly>
             </label>
             <label>
               Assessment timestamp
-              <input id="assessmentTs" type="datetime-local" value="">
+              <input id="assessmentTs" type="text" value="" readonly>
             </label>
             <label>
               MAT needs
@@ -124,10 +124,6 @@
             </label>
           </div>
         </div>
-
-        <div class="commitment-summary" id="commitmentSummary" hidden></div>
-
-        <div class="card commitment-card" id="commitmentStatusPanel" hidden></div>
 
         <div class="card prior-auth-card">
           <h3>Prior Authorization / Pre-Cert</h3>
@@ -164,11 +160,10 @@
                     Facility
                     <select id="paFacility" class="pa-select">
                       <option value="">Select facility...</option>
-                      <option value="EAGLEVILLE">Eagleville</option>
-                      <option value="HUP_CEDAR">HUP Cedar</option>
-                      <option value="THOMAS_JEFFERSON">Thomas Jefferson Hospital</option>
-                      <option value="PENN_HOSPITAL">Pennsylvania Hospital</option>
-                      <option value="MALVERN_BH">Malvern Behavioral Health</option>
+                      <option value="FRIENDS_DETOX">Friends Hospital — Secure Detox</option>
+                      <option value="HOPE_RIDGE">Hope Ridge Recovery</option>
+                      <option value="RIVERVIEW">Riverview Detox</option>
+                      <option value="CITY_ACUTE">City Acute BH</option>
                     </select>
                   </label>
                   <label>
@@ -665,7 +660,7 @@
           </form>
         </div>
 
-        <div class="card" id="panelContactPlanner" data-panel-key="contactPlanner">
+        <div class="card">
           <h3>Contact Planner</h3>
           <div class="contact-grid">
             <div>
@@ -684,7 +679,7 @@
           </div>
         </div>
 
-        <div class="card search-list-card" id="panelActiveSearches" data-panel-key="activeSearches">
+        <div class="card search-list-card">
           <header class="search-list-header">
             <h3>Active Placement Searches</h3>
             <div class="search-list-filters">
@@ -715,12 +710,10 @@
                 </select>
                 <select id="searchFacilityFilter" class="filter-select">
                   <option value="">All Facilities</option>
-                  <option value="EAGLEVILLE">Eagleville</option>
-                  <option value="HUP_CEDAR">HUP Cedar</option>
-                  <option value="THOMAS_JEFFERSON">Thomas Jefferson Hospital</option>
-                  <option value="PENN_HOSPITAL">Pennsylvania Hospital</option>
-                  <option value="MALVERN_BH">Malvern Behavioral Health</option>
-                  <option value="TOWER_BEHAVIORAL">Tower Behavioral Health</option>
+                  <option value="HOPE_RIDGE">Hope Ridge Recovery</option>
+                  <option value="RIVERVIEW">Riverview Detox</option>
+                  <option value="CITY-ACUTE">City Acute BH</option>
+                  <option value="SUNRISE">Sunrise Treatment</option>
                 </select>
                 <select id="searchChannelFilter" class="filter-select">
                   <option value="">All Channels</option>
@@ -735,7 +728,7 @@
           <div id="searchList" class="search-list"></div>
         </div>
 
-        <div class="card patient-list-card" id="panelPatientList" data-panel-key="patientList">
+        <div class="card patient-list-card">
           <header class="patient-list-header">
             <h3>Patient List Preview</h3>
             <div class="patient-list-filters">
@@ -747,16 +740,12 @@
               <div class="filter-dropdowns">
                 <select id="statusFilter" class="filter-select">
                   <option value="">All Statuses</option>
-                  <option value="Accepted">Accepted</option>
-                  <option value="PendingReview">Pending Review</option>
-                  <option value="WaitingTransport">Waiting Transport</option>
-                  <option value="NoBeds">No Beds</option>
-                  <option value="Denied">Denied</option>
-                  <option value="Searching">Searching</option>
-                  <option value="PacketSent">Packet Sent</option>
-                  <option value="Canceled">Canceled</option>
-                  <option value="Expired">Expired</option>
-                  <option value="ReassessRequired">Reassess Required</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="pending">Pending</option>
+                  <option value="waiting">Waiting Transport</option>
+                  <option value="nobeds">No Beds</option>
+                  <option value="denied">Denied</option>
+                  <option value="searching">Searching</option>
                 </select>
                 <select id="assignedFilter" class="filter-select">
                   <option value="">All Staff</option>
@@ -772,14 +761,14 @@
             <table class="patient-list-table" id="patientListTable">
               <thead>
                 <tr>
-                  <th class="col-patient sortable" data-sort="name">Patient <span class="sort-indicator"></span></th>
-                  <th class="col-placement sortable" data-sort="placement">Placement <span class="sort-indicator"></span></th>
-                  <th class="col-mat sortable" data-sort="mat">MAT <span class="sort-indicator"></span></th>
-                  <th class="col-status sortable" data-sort="statusLabel">Status <span class="sort-indicator"></span></th>
-                  <th class="col-transport sortable" data-sort="transport">Transport <span class="sort-indicator"></span></th>
-                  <th class="col-assigned sortable" data-sort="assignedDisplay">Assigned <span class="sort-indicator"></span></th>
-                  <th class="col-lastupdate sortable" data-sort="lastUpdate">Last Update <span class="sort-indicator"></span></th>
-                  <th class="col-reassess sortable" data-sort="reassess">Reassess <span class="sort-indicator"></span></th>
+                  <th class="col-patient">Patient</th>
+                  <th class="col-placement">Placement</th>
+                  <th class="col-mat">MAT</th>
+                  <th class="col-status">Status</th>
+                  <th class="col-transport">Transport</th>
+                  <th class="col-assigned">Assigned</th>
+                  <th class="col-lastupdate">Last Update</th>
+                  <th class="col-reassess">Reassess</th>
                 </tr>
               </thead>
               <tbody id="patientListBody">
@@ -911,7 +900,7 @@
     </main>
 
     <section class="workflow-summary" aria-label="Workflow status">
-      <div class="card timeline-card" id="panelWorkflow" data-panel-key="workflow">
+      <div class="card timeline-card">
         <h3>Workflow Timeline</h3>
         <ol id="timelineList" class="timeline"></ol>
         <div class="timeline-actions">
@@ -919,19 +908,19 @@
           <button id="resetTimeline" class="ghost-btn">Reset timeline</button>
         </div>
       </div>
-      <div class="card directory-card" id="panelSteward" data-panel-key="steward">
+      <div class="card directory-card">
         <h3>Directory Steward Console</h3>
         <div class="directory-summary">
           <p><strong>Brad (Directory Steward)</strong> verified 3 facilities this week.</p>
           <p>Next digest scheduled: Friday 14:00</p>
           <button id="openDirectory" class="ghost-btn">Open directory admin</button>
         </div>
-      </div>
-      <div class="card activity-card privacy" id="panelAudit" data-panel-key="audit">
-        <h3>Audit &amp; Privacy Review</h3>
-        <p>Latest overrides &amp; break-glass entries:</p>
-        <ul id="auditList" class="audit-list"></ul>
-        <button id="exportAudit" class="ghost-btn">Export last 7 days</button>
+        <div class="card activity-card privacy">
+          <h3>Audit &amp; Privacy Review</h3>
+          <p>Latest overrides &amp; break-glass entries:</p>
+          <ul id="auditList" class="audit-list"></ul>
+          <button id="exportAudit" class="ghost-btn">Export last 7 days</button>
+        </div>
       </div>
     </section>
 
@@ -1078,34 +1067,6 @@
         <label>Summary
           <input type="text" id="popoverSummary" placeholder="One-line summary">
         </label>
-        
-        <!-- Simple Action Tags Section -->
-        <div style="margin: 16px 0; padding: 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px;">
-          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #475569;">Action Tags</label>
-          <div id="actionTagsContainer">
-            <p style="color: #64748b; font-size: 0.875rem; margin: 0;">Click checkboxes to add/remove action items:</p>
-            <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="waiting_transport"> 🚐 Waiting on Transport
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="schedule_transport"> 📅 Schedule Transport
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="contact_patient"> 📞 Contact Patient
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="verify_insurance"> 💳 Verify Insurance
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="send_packet"> 📦 Send Packet
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; font-size: 0.875rem;">
-                <input type="checkbox" data-tag="follow_up_call"> ☎️ Follow-up Call
-              </label>
-            </div>
-          </div>
-        </div>
       </div>
       <footer>
         <button class="ghost-btn" id="openDrawerFromPopover">Open full drawer</button>
@@ -1372,9 +1333,7 @@
         <!-- Settings content injected by script.js -->
       </div>
       <footer class="modal-actions">
-        <button class="ghost-btn" id="resetSettings">Reset to defaults</button>
-        <button class="primary-btn" id="saveSettings">Save &amp; Close</button>
-        <a href="../doc/Review/CRC_Page_SSOT_and_Layout_v1/17a_User_Preferences_Default.json" class="ghost-btn" target="_blank" rel="noopener">Open source file</a>
+        <a href="../Review/CRC_Page_SSOT_and_Layout_v1/17a_User_Preferences_Default.json" class="ghost-btn" target="_blank" rel="noopener">Open source file</a>
       </footer>
     </div>
   </div>
@@ -1590,6 +1549,6 @@
     </div>
   </div>
 
-  <script type="module" src="/src/main.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

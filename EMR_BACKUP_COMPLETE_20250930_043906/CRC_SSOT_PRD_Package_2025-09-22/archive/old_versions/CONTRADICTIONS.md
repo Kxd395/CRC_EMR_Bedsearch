@@ -1,0 +1,14 @@
+# CRC SSOT / Facility Finder — Contradictions Register
+
+| Category | Description | Source of Truth | Conflicting Artifact | Resolution / Patch |
+| --- | --- | --- | --- | --- |
+| Enumerations | MAT modes must be `None`, `MethadoneInduction`, `MethadoneContinue`, `SuboxoneInduction`, `SuboxoneContinue`, `DetoxOnly` (02_Field_Dictionary_SDEs.csv rows 4-5) | 02_Field_Dictionary_SDEs.csv | ui_prototype/script.js:13-20 (pre-patch used `MethadoneInduct`, `SuboxoneInduct`, and `ExtendedReleaseNaltrexone`) | Resolved via `PATCHES/fix-ui-enums.patch` aligning `matOptions` and sample data. |
+| Enumerations | Level of Care options include acute codes (PRD §6, instructions for LoC) | 01_PRD_CRC_SSOT_Placement_and_Facility_Finder.md §6 | ui_prototype/script.js:2-10 (pre-patch limited to numeric ASAM levels) | Resolved via `PATCHES/fix-ui-enums.patch` adding canonical LoC entries with descriptions. |
+| UI Status Palette | Canonical placement statuses must map to Waiting/Sent (yellow), Accepted (green), Denied (red), NoBeds (grey) (user workflow instructions) | project instructions / PRD §7 | ui_prototype/script.js:22-58 and styles (pre-patch used divergent chips and coloring) | Resolved by canonical palette injected in `PATCHES/fix-ui-enums.patch`; downstream styles already support `badge-*` classes. |
+| Data Validation | Medical acuity enumerations defined as `Low|Moderate|High` (02_Field_Dictionary_SDEs.csv row 6) | 02_Field_Dictionary_SDEs.csv | Prototype sample data uses `Secured`, `StepUp`, `Routine` (script.js:80-326 etc.) | Open issue — requires Epic data migration design; documented in AUDIT_REPORT next steps. |
+| Business Rules | Finder validation logic enforcing MAT/302/acuity/payer rules (04_Rule_Specs_Validation_and_UDS.md) | 04_Rule_Specs_Validation_and_UDS.md | Prototype lacks actual rule engine; only static data (script.js) | Open — add to Epic build backlog; no patch possible without backend access. |
+| Audit Logging | Acceptance Criteria #6 demands auditable edits/selections/overrides | 05_Acceptance_Criteria.md item 6 | Prototype has no audit persistence or export | Open — requires Epic Chronicles + reporting build; noted in AUDIT_REPORT. |
+| Consent & RBAC | 07_Governance_and_Security_RACI.md mandates Part 2 segmentation and break-the-glass workflows | 07_Governance_and_Security_RACI.md §Security & Privacy | Prototype exposes full dataset without gating | Open — to be implemented in Epic build; pending repositories. |
+| Breadcrumbs / Navigation | Requirement for Navigator alignment with route hierarchy (PRD §5) | 01_PRD... §5 | Prototype lacks synchronized breadcrumbs and route metadata (script.js UI only) | Documented as enhancement; dependent on real Navigator configuration. |
+
+**Patch Reference:** `PATCHES/fix-ui-enums.patch` (Conventional Commit scope `fix(ui-enums)` suggested) covers implemented remediations.

@@ -7,21 +7,6 @@
 **Scope:** Static prototype frontend (HTML/CSS/JavaScript)  
 **Status:** ⚠️ LIMITED AUDIT - Missing backend infrastructure  
 
-
-## Toolchain Update (2025-09-23)
-
-- Converted prototype to a Vite-managed project with npm-based workflows.
-- Added ESLint and Prettier configurations for consistent formatting and linting.
-- Consolidated legacy documentation and the Review packet into `../doc/` for a single reference point.
-- Relocated UI-specific design notes into `../doc/ui_prototype/` for centralized documentation.
-- Archived prototype back-ups (`index_backup.html`, `restore_points/`, etc.) to `../doc/archive/ui_prototype/` so the active workspace mirrors deployable assets.
-- Persisted layout/tab visibility selections to `localStorage` so reviewer preferences survive refreshes.
-- Added `Reset to defaults` control and Escape-to-close handling in the Settings modal for consistent UX.
-- Commitment panel settings now include per-section toggles (docs, schedule, facilities, quick actions, quick update) with persisted preferences.
-- Commitment panel now respects Assessment gating, adds summary/expand UX, and introduces commitment-specific preferences (collapse default, auto-expand rules).
-- Bundled existing assets into `src/` with module entrypoints for modern builds.
-- Updated Netlify configuration to build from the optimized Vite output in `dist/`.
-
 ## Reconnaissance Commands Log
 
 | Timestamp (UTC) | Action | Purpose | Outcome |
@@ -53,8 +38,8 @@
 
 ### ✅ **Present Components**
 - **Frontend UI:** Complete Epic EMR interface (index.html - 860 lines)
-- **Client Logic:** JavaScript application (`src/app.js` ~185KB)
-- **Styling:** Epic healthcare theme (`src/styles/main.css` ~51KB) 
+- **Client Logic:** JavaScript application (script.js - 185KB)
+- **Styling:** Epic healthcare theme (styles.css - 51KB) 
 - **Static Data:** 5 test patients with placement scenarios
 - **Local Storage:** Browser-based persistence (localStorage)
 
@@ -62,9 +47,9 @@
 - **Backend Services:** No API endpoints, authentication, or server logic
 - **Database Layer:** No patient data persistence, schema, or migrations
 - **Security Framework:** No RBAC, encryption, audit logging, or session management
-- **Dependency Management:** npm + Vite toolchain established; dependencies tracked via `package.json`.
+- **Dependency Management:** No package.json, requirements.txt, or dependency tracking
 - **Test Infrastructure:** No unit tests, integration tests, or security test suites
-- **CI/CD Pipeline:** No automated CI/CD yet; Netlify configured for static deploys.
+- **CI/CD Pipeline:** No build process, security scans, or deployment automation
 - **Configuration Management:** No environment configs, secrets management, or infrastructure as code
 
 ## Audit Limitations

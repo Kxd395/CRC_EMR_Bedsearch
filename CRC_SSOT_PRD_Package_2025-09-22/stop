@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "🛑 Stopping all servers..."
+lsof -ti:3001 | xargs kill -9 2>/dev/null && echo "✅ API stopped" || echo "⚠️ No API running"
+lsof -ti:5173 | xargs kill -9 2>/dev/null && echo "✅ UI stopped" || echo "⚠️ No UI running"

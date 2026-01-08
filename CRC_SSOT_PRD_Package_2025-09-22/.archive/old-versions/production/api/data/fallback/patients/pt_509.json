@@ -1,0 +1,20 @@
+{
+  "id": "pt_509",
+  "first_name": "Mei",
+  "last_name": "Lin",
+  "date_of_birth": "1990-01-01T05:00:00.000Z",
+  "mrn": "2025509",
+  "admission_status": "302Hold",
+  "asam_level": "4.0WM",
+  "level_of_care": "Medically Managed",
+  "commitment_status": "302Hold",
+  "medical_acuity": "Medically Managed",
+  "mat_needs": "None",
+  "insurance_primary": "Unknown",
+  "insurance_secondary": "",
+  "emergency_contact_name": null,
+  "emergency_contact_phone": null,
+  "created_at": "2025-09-29T03:24:00.077Z",
+  "updated_at": "2025-09-29T03:24:00.077Z",
+  "last_sync": "2025-09-29T03:24:00.077Z"
+}

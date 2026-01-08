@@ -1,0 +1,342 @@
+# Docker Compose Configuration for EMR Database System
+# Healthcare EMR Database - Development Environment
+# Version: 1.0.0
+# Created: September 30, 2025
+
+version: '3.8'
+
+services:
+  # PostgreSQL 16 Database Server
+  postgres:
+    image: postgres:16
+    container_name: emr_postgres_dev
+    restart: unless-stopped
+    
+    # Environment Configuration
+    environment:
+      POSTGRES_DB: ${EMR_DATABASE_NAME:-emr_placement_ssot}
+      POSTGRES_USER: ${EMR_DB_ADMIN_USER:-emr_admin}
+      POSTGRES_PASSWORD: ${EMR_DB_ADMIN_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--auth-local=trust --auth-host=md5"
+      
+    # Port Configuration (Development)
+    ports:
+      - "${EMR_DATABASE_DEV_PORT:-5433}:5432"
+      
+    # Volume Mounts
+    volumes:
+      # Database data persistence
+      - postgres_data:/var/lib/postgresql/data
+      
+      # Initialization scripts
+      - ./schema/postgresql_emr_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      
+      # Configuration files
+      - ./docker/postgres.conf:/etc/postgresql/postgresql.conf:ro
+      - ./docker/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      
+      # Backup directory
+      - ./backups:/backups
+      
+    # Resource Limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+          
+    # Health Check
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${EMR_DB_ADMIN_USER:-emr_admin} -d ${EMR_DATABASE_NAME:-emr_placement_ssot}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+      
+    # Logging Configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        
+    # Network Configuration
+    networks:
+      - emr_network
+
+  # pgAdmin 4 - Database Administration Interface
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: emr_pgadmin_dev
+    restart: unless-stopped
+    
+    # Environment Configuration
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@homelab.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: 'True'
+      PGADMIN_CONFIG_LOGIN_BANNER: 'EMR Database Administration - Home Lab'
+      
+    # Port Configuration
+    ports:
+      - "${PGADMIN_PORT:-8080}:80"
+      
+    # Volume Mounts
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./config/servers.json:/pgadmin4/servers.json:ro
+      
+    # Dependencies
+    depends_on:
+      postgres:
+        condition: service_healthy
+        
+    # Health Check
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/misc/ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+      
+    # Logging Configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        
+    # Network Configuration
+    networks:
+      - emr_network
+
+  # Redis Cache (for future application use)
+  redis:
+    image: redis:7-alpine
+    container_name: emr_redis_dev
+    restart: unless-stopped
+    
+    # Environment Configuration
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      
+    # Port Configuration
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+      
+    # Volume Mounts
+    volumes:
+      - redis_data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      
+    # Command Override (with authentication)
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}
+    
+    # Resource Limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+          
+    # Health Check
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a ${REDIS_PASSWORD} ping | grep PONG"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+      
+    # Logging Configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+        
+    # Network Configuration
+    networks:
+      - emr_network
+
+  # Backup Service (automated database backups)
+  backup:
+    image: postgres:16
+    container_name: emr_backup_service
+    restart: unless-stopped
+    
+    # Environment Configuration
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${EMR_DATABASE_NAME:-emr_placement_ssot}
+      POSTGRES_USER: ${EMR_DB_ADMIN_USER:-emr_admin}
+      POSTGRES_PASSWORD: ${EMR_DB_ADMIN_PASSWORD}
+      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-"0 2 * * *"}  # Daily at 2 AM
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-30}
+      
+    # Volume Mounts
+    volumes:
+      - ./backups:/backups
+      - ./scripts/backup_emr_database.sh:/usr/local/bin/backup_script.sh:ro
+      
+    # Command Override (backup cron job)
+    command: >
+      bash -c "
+        echo '${BACKUP_SCHEDULE:-0 2 * * *} /usr/local/bin/backup_script.sh' | crontab - &&
+        crond -f
+      "
+      
+    # Dependencies
+    depends_on:
+      postgres:
+        condition: service_healthy
+        
+    # Logging Configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+        
+    # Network Configuration
+    networks:
+      - emr_network
+
+  # Monitoring Service (Prometheus metrics)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: emr_prometheus_dev
+    restart: unless-stopped
+    
+    # Port Configuration
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+      
+    # Volume Mounts
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+      
+    # Command Override
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+      
+    # Health Check
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+      
+    # Logging Configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+        
+    # Network Configuration
+    networks:
+      - emr_network
+
+  # PostgreSQL Exporter (Prometheus metrics for database)
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: emr_postgres_exporter
+    restart: unless-stopped
+    
+    # Environment Configuration
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${EMR_DB_READONLY_USER:-emr_readonly}:${EMR_DB_READONLY_PASSWORD}@postgres:5432/${EMR_DATABASE_NAME:-emr_placement_ssot}?sslmode=disable"
+      
+    # Port Configuration
+    ports:
+      - "${POSTGRES_EXPORTER_PORT:-9187}:9187"
+      
+    # Dependencies
+    depends_on:
+      postgres:
+        condition: service_healthy
+        
+    # Health Check
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9187/metrics || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+      
+    # Logging Configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+        
+    # Network Configuration
+    networks:
+      - emr_network
+
+# ===========================================
+# VOLUMES CONFIGURATION
+# ===========================================
+
+volumes:
+  # PostgreSQL data persistence
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/postgres
+      
+  # pgAdmin data persistence
+  pgadmin_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/pgadmin
+      
+  # Redis data persistence
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/redis
+      
+  # Prometheus data persistence
+  prometheus_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/prometheus
+
+# ===========================================
+# NETWORKS CONFIGURATION
+# ===========================================
+
+networks:
+  emr_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    driver_opts:
+      com.docker.network.bridge.name: emr_br0
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+      com.docker.network.driver.mtu: 1500

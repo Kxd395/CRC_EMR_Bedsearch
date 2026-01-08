@@ -1,0 +1,6 @@
+PRIOR AUTH — PHONE SCRIPT (UM Line)
+
+“Hi, this is {name}, {role} from CRC calling about Prior Auth for {patient}, DOB {dob}.
+Service: ASAM {asam} at {facility}, expected admit {admit_datetime}.
+Clinical risk: {risk_note}. We can fax or upload supporting documents now.
+Can I get a ticket/reference number and confirm the best callback/fax?”

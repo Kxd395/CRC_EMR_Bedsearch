@@ -1,0 +1,384 @@
+# EMR Database System - Home Lab Configuration
+# Healthcare EMR Database Integration with Home Lab Standards
+# Created: September 30, 2025
+# Version: 1.0.0
+
+# ===========================================
+# HOME LAB INTEGRATION
+# ===========================================
+
+homelab:
+  project_name: "emr_database_system"
+  version: "1.0.0"
+  environment: "production"
+  created_date: "2025-09-30"
+  
+  # Home Lab Base Configuration
+  base_path: "${HOME_LAB_BASE_PATH}"
+  config_path: "${HOME_LAB_BASE_PATH}/config"
+  scripts_path: "${HOME_LAB_BASE_PATH}/scripts"
+  
+  # Integration with Home Lab Systems
+  integration:
+    port_registry: true
+    secrets_manager: true
+    backup_system: true
+    monitoring: true
+    documentation: true
+
+# ===========================================
+# NETWORK CONFIGURATION
+# ===========================================
+
+network:
+  # Primary Network (Tailscale VPN)
+  primary:
+    type: "tailscale_vpn"
+    network: "100.0.0.0/8"
+    database_server: "100.112.67.23"
+    development_client: "100.94.125.38"
+    
+  # Fallback Network (Local LAN)
+  fallback:
+    type: "local_lan"
+    network: "192.168.0.0/24"
+    database_server: "192.168.0.40"
+    development_client: "192.168.0.30"
+    
+  # SSH Configuration
+  ssh:
+    port: 2222
+    user: "kxd395"
+    key_paths:
+      - "${HOME}/.ssh/homelab"
+      - "${HOME}/.ssh/id_rsa" 
+      - "${HOME}/.ssh/id_ed25519"
+
+# ===========================================
+# DATABASE CONFIGURATION
+# ===========================================
+
+database:
+  # PostgreSQL Configuration
+  postgresql:
+    version: "16"
+    host: "100.112.67.23"
+    port: 5432
+    database_name: "emr_placement_ssot"
+    
+  # Users and Roles
+  users:
+    admin:
+      username: "emr_admin"
+      role: "application_admin"
+      permissions: ["CONNECT", "CREATE", "SELECT", "INSERT", "UPDATE", "DELETE"]
+      
+    readonly:
+      username: "emr_readonly"
+      role: "read_only_user"
+      permissions: ["CONNECT", "SELECT"]
+      
+    application:
+      username: "emr_app"
+      role: "application_user"
+      permissions: ["CONNECT", "SELECT", "INSERT", "UPDATE"]
+
+  # Connection Pool Settings
+  connection_pool:
+    min_size: 5
+    max_size: 20
+    idle_timeout_ms: 30000
+    connection_timeout_ms: 2000
+    
+  # Backup Configuration
+  backup:
+    enabled: true
+    frequency: "daily"
+    retention_days: 30
+    location: "/home/kxd395/backups/emr"
+    encryption: true
+
+# ===========================================
+# EMR HEALTHCARE CONFIGURATION
+# ===========================================
+
+healthcare:
+  # System Information
+  system_name: "EMR Patient Placement System"
+  system_type: "healthcare_emr"
+  hipaa_compliance: true
+  
+  # Clinical Workflow Settings
+  workflow:
+    default_priority: "medium"
+    priority_response_times:
+      critical: "1 hour"
+      high: "4 hours"
+      medium: "12 hours"
+      low: "24 hours"
+      
+    placement_types:
+      - "admission"
+      - "transfer"  
+      - "readmission"
+      - "302_hold"
+      - "mat_treatment"
+      - "detox"
+      - "emergency"
+      - "planned"
+      
+  # Facility Capabilities
+  facility_capabilities:
+    accepts_302: "Involuntary psychiatric holds"
+    accepts_mat: "Medication-assisted treatment"
+    accepts_secure: "Secure/locked units"
+    accepts_detox: "Detoxification services"
+    accepts_pediatric: "Pediatric patients"
+    accepts_geriatric: "Geriatric patients"
+    accepts_dual_diagnosis: "Mental health + substance abuse"
+    
+  # HIPAA Compliance Settings
+  hipaa:
+    audit_logging: true
+    phi_encryption: true
+    audit_retention_years: 7
+    minimum_log_level: "INFO"
+    breach_notification: true
+
+# ===========================================
+# SECURITY CONFIGURATION  
+# ===========================================
+
+security:
+  # Authentication
+  authentication:
+    method: "ssh_key"
+    require_2fa: false
+    session_timeout_minutes: 30
+    max_login_attempts: 3
+    
+  # Encryption Settings
+  encryption:
+    phi_at_rest: true
+    phi_in_transit: true
+    database_ssl: true
+    backup_encryption: true
+    
+  # Access Control
+  access_control:
+    role_based: true
+    audit_all_access: true
+    restrict_phi_access: true
+    
+  # Password Policy
+  password_policy:
+    min_length: 12
+    require_special_chars: true
+    require_numbers: true
+    require_uppercase: true
+    expiry_days: 90
+
+# ===========================================
+# MONITORING AND ALERTING
+# ===========================================
+
+monitoring:
+  # Health Checks
+  health_checks:
+    enabled: true
+    interval_seconds: 60
+    timeout_seconds: 10
+    endpoints:
+      - name: "database_connectivity"
+        type: "postgresql"
+        critical: true
+      - name: "ssh_connectivity"
+        type: "ssh"
+        critical: true
+      - name: "audit_logging"
+        type: "audit_check"
+        critical: true
+        
+  # Performance Monitoring
+  performance:
+    query_timeout_seconds: 30
+    connection_monitor: true
+    slow_query_threshold_ms: 1000
+    
+  # Alerting
+  alerts:
+    enabled: true
+    channels: ["email", "log"]
+    critical_response_time_minutes: 5
+    thresholds:
+      database_connections: 50
+      query_time_ms: 5000
+      failed_logins: 5
+      audit_failures: 1
+
+# ===========================================
+# DEVELOPMENT AND DEPLOYMENT
+# ===========================================
+
+deployment:
+  # Environment Settings
+  environments:
+    development:
+      database_host: "localhost"
+      database_port: 5433
+      debug_mode: true
+      sample_data: true
+      
+    staging:
+      database_host: "192.168.0.40"
+      database_port: 5432
+      debug_mode: false
+      sample_data: true
+      
+    production:
+      database_host: "100.112.67.23"
+      database_port: 5432
+      debug_mode: false
+      sample_data: false
+      
+  # Deployment Scripts
+  scripts:
+    schema_deploy: "./deployment_scripts/apply_schema.sh"
+    schema_validate: "./deployment_scripts/validate_emr_schema.sh"
+    backup_create: "./scripts/backup_emr_database.sh"
+    
+  # Docker Configuration (for local development)
+  docker:
+    compose_file: "docker-compose.yml"
+    postgres_image: "postgres:16"
+    development_port: 5433
+
+# ===========================================
+# PORT ALLOCATION (Home Lab Standards)
+# ===========================================
+
+ports:
+  # Reserved Ports for EMR System
+  allocated:
+    database_primary: 5432
+    database_development: 5433
+    ssh_server: 2222
+    
+  # Future Application Ports
+  reserved:
+    web_interface: 3100
+    api_server: 8080
+    metrics: 9090
+    
+  # Port Registry Integration
+  registry_integration: true
+  auto_register: true
+
+# ===========================================
+# INTEGRATION APIS (Future Use)
+# ===========================================
+
+integrations:
+  # HL7 FHIR Integration
+  fhir:
+    enabled: false
+    base_url: ""
+    version: "R4"
+    
+  # Electronic Health Record Integration  
+  ehr:
+    enabled: false
+    provider: ""
+    api_endpoint: ""
+    
+  # Insurance Verification
+  insurance:
+    enabled: false
+    primary_provider: ""
+    api_endpoint: ""
+    
+  # Laboratory Integration
+  lab:
+    enabled: false
+    lis_system: ""
+    api_endpoint: ""
+
+# ===========================================
+# COMPLIANCE AND REPORTING
+# ===========================================
+
+compliance:
+  # HIPAA Requirements
+  hipaa:
+    compliance_officer: ""
+    breach_notification_email: ""
+    audit_schedule: "monthly"
+    risk_assessment_schedule: "annually"
+    
+  # Quality Metrics
+  quality:
+    track_placement_times: true
+    track_patient_outcomes: true
+    generate_reports: true
+    report_schedule: "monthly"
+    
+  # Documentation Requirements
+  documentation:
+    maintain_policies: true
+    update_frequency: "annually"
+    review_schedule: "quarterly"
+
+# ===========================================
+# BACKUP AND DISASTER RECOVERY
+# ===========================================
+
+backup:
+  # Backup Strategy
+  strategy: "incremental"
+  frequency: "daily"
+  retention: 30
+  
+  # Backup Locations
+  locations:
+    primary: "/home/kxd395/backups/emr"
+    secondary: "/srv/samba/shared/backups/emr"
+    
+  # Disaster Recovery
+  disaster_recovery:
+    rto_hours: 4  # Recovery Time Objective
+    rpo_hours: 1  # Recovery Point Objective
+    backup_verification: true
+    restoration_testing: "monthly"
+
+# ===========================================
+# CONFIGURATION METADATA
+# ===========================================
+
+metadata:
+  config_version: "1.0.0"
+  created_by: "Home Lab System"
+  created_date: "2025-09-30T00:00:00Z"
+  last_updated: "2025-09-30T00:00:00Z"
+  schema_version: "emr_v1.0.0"
+  
+  # Home Lab Standards Compliance
+  standards_compliance:
+    naming_convention: true
+    port_registry: true
+    secrets_management: true
+    documentation: true
+    security_baseline: true
+    
+  # Dependencies
+  dependencies:
+    - "homelab_config.yaml"
+    - "port_registry.json"
+    - "secrets_registry.json"
+    
+  # Related Files
+  related_files:
+    - "../schema/postgresql_emr_schema.sql"
+    - "../deployment_scripts/apply_schema.sh"
+    - "../deployment_scripts/validate_emr_schema.sh"
+    - "./.env.secrets"
+    - "./emr_config.env.example"

@@ -1,0 +1,17 @@
+{
+  "asamLevel": "",
+  "assessmentTs": "",
+  "matNeeds": "SuboxoneContinue",
+  "commitmentStatus": "",
+  "acuity": "",
+  "placementNeeded": "Y",
+  "savedBy": "UI User",
+  "savedAt": "2025-09-30T16:37:28.497Z",
+  "patientId": "pt_505",
+  "id": "mg6s6aljciqsf4u",
+  "lastSaved": "2025-09-30T16:37:28.502Z",
+  "patient_id": "pt_505",
+  "createdAt": "2025-09-30T16:37:27.489Z",
+  "updatedAt": "2025-09-30T16:37:28.502Z",
+  "persistenceMethod": "fallback"
+}

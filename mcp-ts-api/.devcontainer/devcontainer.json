@@ -1,0 +1,26 @@
+{
+  "name": "mcp-ts-api",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/deno:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "denoland.vscode-deno",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig"
+      ],
+      "settings": {
+        "deno.enable": true,
+        "deno.lint": true,
+        "editor.formatOnSave": true,
+        "files.eol": "\n"
+      }
+    }
+  },
+  "postCreateCommand": "npm ci && cp .env.example .env",
+  "forwardPorts": [],
+  "remoteUser": "node"
+}

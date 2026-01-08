@@ -1,0 +1,43 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - heading "CRC SSOT EMR System" [level=1] [ref=e4]
+    - paragraph [ref=e5]: Crisis Response Center - Single Source of Truth
+    - button "⚙️ Settings" [ref=e6] [cursor=pointer]
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - heading "🔗 Chrome MCP Integration Status" [level=3] [ref=e9]
+      - paragraph [ref=e10]: Model Context Protocol (MCP) server ready for healthcare workflow automation.
+      - generic [ref=e11]: ✅ Connected - Healthcare workflows ready
+    - generic [ref=e12]:
+      - heading "🏥 Facility Finder" [level=3] [ref=e13]
+      - searchbox "Search facilities in Philadelphia region..." [ref=e14]
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - checkbox "Residential" [ref=e17]
+          - text: Residential
+        - generic [ref=e18]:
+          - checkbox "Outpatient" [ref=e19]
+          - text: Outpatient
+        - generic [ref=e20]:
+          - checkbox "Inpatient" [ref=e21]
+          - text: Inpatient
+    - generic [ref=e22]:
+      - generic [ref=e23] [cursor=pointer]:
+        - generic [ref=e24] [cursor=pointer]: Smith, John A.
+        - generic [ref=e25] [cursor=pointer]: "MRN: 123456789"
+        - generic [ref=e26] [cursor=pointer]: Active Placement
+      - generic [ref=e27] [cursor=pointer]:
+        - generic [ref=e28] [cursor=pointer]: Johnson, Sarah M.
+        - generic [ref=e29] [cursor=pointer]: "MRN: 987654321"
+        - generic [ref=e30] [cursor=pointer]: Pending Review
+      - generic [ref=e31] [cursor=pointer]:
+        - generic [ref=e32] [cursor=pointer]: Williams, Robert J.
+        - generic [ref=e33] [cursor=pointer]: "MRN: 456789123"
+        - generic [ref=e34] [cursor=pointer]: Placement Coordination
+    - generic [ref=e35]:
+      - heading "🧪 Chrome MCP Test Results" [level=4] [ref=e36]
+      - generic [ref=e37]: Running automated tests...
+```

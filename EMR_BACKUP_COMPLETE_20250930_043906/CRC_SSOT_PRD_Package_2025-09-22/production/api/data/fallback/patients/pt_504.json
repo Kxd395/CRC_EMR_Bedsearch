@@ -1,0 +1,20 @@
+{
+  "id": "pt_504",
+  "first_name": "Anthony",
+  "last_name": "Brooks",
+  "date_of_birth": "1990-01-01T05:00:00.000Z",
+  "mrn": "2025504",
+  "admission_status": "302Hold",
+  "asam_level": "IP Psych",
+  "level_of_care": "Acute Psychiatric",
+  "commitment_status": "302Hold",
+  "medical_acuity": "Acute Psychiatric",
+  "mat_needs": "MethadoneInduction",
+  "insurance_primary": "Unknown",
+  "insurance_secondary": "",
+  "emergency_contact_name": null,
+  "emergency_contact_phone": null,
+  "created_at": "2025-09-29T03:23:59.518Z",
+  "updated_at": "2025-09-29T03:23:59.518Z",
+  "last_sync": "2025-09-29T03:23:59.518Z"
+}

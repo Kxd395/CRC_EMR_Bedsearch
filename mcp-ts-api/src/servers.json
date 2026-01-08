@@ -1,0 +1,55 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@0.3.2"],
+      "env": {
+        "DEFAULT_MINIMUM_TOKENS": "2000"
+      },
+      "cwd": "${HOME}/.mcp/context7",
+      "timeoutMs": 120000
+    },
+    "apple-mcp": {
+      "command": "bunx",
+      "args": ["@dhravya/apple-mcp@0.1.7"],
+      "env": {},
+      "cwd": "${HOME}/.mcp/apple",
+      "timeoutMs": 120000
+    },
+    "annas-archive": {
+      "command": "${HOME}/projects/School_Jefferson_DevTools/annas-mcp/annas-mcp",
+      "args": ["mcp"],
+      "env": {
+        "ANNAS_SECRET_KEY": "${ANNAS_SECRET_KEY}",
+        "ANNAS_DOWNLOAD_PATH": "${HOME}/projects/School_Jefferson_DevTools/downloads"
+      },
+      "cwd": "${HOME}/projects/School_Jefferson_DevTools/annas-mcp",
+      "timeoutMs": 180000,
+      "disabled": true
+    },
+    "shadcn-ui": {
+      "command": "node",
+      "args": ["${HOME}/projects/DoseTap/shadcn-ui/build/index.js"],
+      "env": {},
+      "cwd": "${HOME}/projects/DoseTap/shadcn-ui",
+      "timeoutMs": 120000
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@0.2.1",
+        "--channel=canary",
+        "--headless=true",
+        "--isolated=true",
+        "--remote-debugging-port=${CHROME_DEBUG_PORT:-9223}",
+        "--user-data-dir=${HOME}/.cache/mcp/chrome-${RANDOM}"
+      ],
+      "env": {
+        "CHROME_BIN": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+      },
+      "cwd": "${HOME}/.mcp/chrome",
+      "timeoutMs": 180000
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "serviceName": "DemoTools",
+  "tools": [
+    {
+      "name": "search_docs",
+      "description": "Full text search over local docs",
+      "params": [
+        { "name": "query", "type": "string", "required": true }
+      ],
+      "returns": "object"
+    },
+    {
+      "name": "summarize",
+      "description": "Summarize text to N sentences",
+      "params": [
+        { "name": "text", "type": "string", "required": true },
+        { "name": "sentences", "type": "number", "required": false }
+      ],
+      "returns": "string"
+    }
+  ]
+}

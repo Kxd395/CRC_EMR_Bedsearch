@@ -1,0 +1,282 @@
+{
+  "config": {
+    "configFile": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/playwright.config.js",
+    "rootDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "reports/results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "reports/results.xml"
+        }
+      ],
+      [
+        "line",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile-chrome",
+        "name": "mobile-chrome",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile-safari",
+        "name": "mobile-safari",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "google-chrome",
+        "name": "google-chrome",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "epic-emr-chrome",
+        "name": "epic-emr-chrome",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "hipaa-compliance",
+        "name": "hipaa-compliance",
+        "testDir": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.1",
+    "workers": 1,
+    "webServer": {
+      "command": "cd ../prototypes/ui_prototype && npx vite dev",
+      "port": 5173,
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "e2e/emr-core-functionality.spec.js",
+      "file": "e2e/emr-core-functionality.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CRC SSOT EMR – Core Functionality",
+          "file": "e2e/emr-core-functionality.spec.js",
+          "line": 54,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load EMR interface with all core components",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "interrupted",
+                      "duration": 1210,
+                      "error": {
+                        "message": "Error: page.waitForLoadState: Test ended.",
+                        "stack": "Error: page.waitForLoadState: Test ended.\n    at /Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests/e2e/emr-core-functionality.spec.js:81:16",
+                        "location": {
+                          "file": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests/e2e/emr-core-functionality.spec.js",
+                          "column": 16,
+                          "line": 81
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'.app-shell'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveTitle(\u001b[35m/CRC SSOT/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 83 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 84 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests/e2e/emr-core-functionality.spec.js",
+                            "column": 16,
+                            "line": 81
+                          },
+                          "message": "Error: page.waitForLoadState: Test ended.\n\n\u001b[0m \u001b[90m 79 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 80 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForSelector(\u001b[32m'.app-shell'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 81 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 82 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveTitle(\u001b[35m/CRC SSOT/\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 83 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 84 |\u001b[39m\u001b[0m\n\u001b[2m    at /Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests/e2e/emr-core-functionality.spec.js:81:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-29T17:19:05.560Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results/e2e-emr-core-functionality-aa7b6-ce-with-all-core-components-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/test-results/e2e-emr-core-functionality-aa7b6-ce-with-all-core-components-chromium/video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/VScode_Projects/EMR/CRC_SSOT_PRD_Package_2025-09-22/development/testing/tests/e2e/emr-core-functionality.spec.js",
+                        "column": 16,
+                        "line": 81
+                      }
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3d9251551919a19dbdae-0bc5095bd7779ca6006d",
+              "file": "e2e/emr-core-functionality.spec.js",
+              "line": 85,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-29T17:19:04.321Z",
+    "duration": 2614.214,
+    "expected": 0,
+    "skipped": 1,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

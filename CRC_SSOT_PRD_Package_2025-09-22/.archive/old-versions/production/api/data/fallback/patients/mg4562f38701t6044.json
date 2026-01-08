@@ -1,0 +1,10 @@
+{
+  "name": "Test Patient",
+  "mrn": "TEST123",
+  "test": "verification",
+  "id": "mg4562f38701t6044",
+  "createdAt": "2025-09-28T20:17:53.343Z",
+  "updatedAt": "2025-09-28T20:17:53.343Z",
+  "lastSync": "2025-09-28T20:17:53.343Z",
+  "persistenceMethod": "fallback"
+}

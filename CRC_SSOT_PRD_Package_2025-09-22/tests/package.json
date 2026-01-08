@@ -1,0 +1,45 @@
+{
+  "name": "crc-ssot-testing-suite",
+  "version": "1.0.0",
+  "description": "Comprehensive testing suite for CRC SSOT EMR System with Chrome MCP and Playwright",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:chrome": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project=mobile",
+    "test:api": "playwright test tests/api/",
+    "test:e2e": "playwright test tests/e2e/",
+    "test:visual": "playwright test tests/visual/",
+    "test:accessibility": "playwright test tests/accessibility/",
+    "test:performance": "playwright test tests/performance/",
+    "test:security": "playwright test tests/security/",
+    "test:hipaa": "playwright test tests/compliance/hipaa/",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install",
+    "install:deps": "playwright install-deps",
+    "chrome:mcp": "node chrome-mcp-server.js",
+    "start:prototype": "cd ../prototypes/ui_prototype && npm run dev",
+    "test:with-server": "concurrently \"npm run start:prototype\" \"wait-on http://localhost:5173 && npm run test\"",
+    "lint": "eslint tests/",
+    "format": "prettier --write tests/"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@axe-core/playwright": "^4.8.2",
+    "lighthouse": "^11.4.0",
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0",
+    "eslint": "^8.55.0",
+    "prettier": "^3.1.0"
+  },
+  "dependencies": {
+    "chrome-remote-interface": "^0.33.0",
+    "ws": "^8.14.2"
+  }
+}

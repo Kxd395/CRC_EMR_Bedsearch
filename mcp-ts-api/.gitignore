@@ -1,0 +1,39 @@
+# Environment files
+.env
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.js
+*.js.map
+!src/servers.json
+
+# Generated files
+src/bindings.ts
+src/.tmp.exec.ts
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+
+# IDE
+.vscode/**.history
+.idea/
+
+# Deno cache
+.deno/
+
+# Test outputs
+test-results/
+coverage/
+.nyc_output/
+
+# Chrome user data
+.cache/

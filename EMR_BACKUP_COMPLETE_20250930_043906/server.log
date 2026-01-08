@@ -1,0 +1,71 @@
+🚀 CRC SSOT EMR API Server Started
+📡 Server running on http://localhost:3001
+🏥 Healthcare API ready for EMR operations
+🔒 Security headers enabled
+📊 Database pool configured
+📝 Fetching assessments for patient: mg44ftxu8e20ucstt
+❌ Database query failed, checking fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Fetching assessments for patient: pt_501
+❌ Database query failed, checking fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Saving assessment data: {
+  patientId: 'current-patient',
+  asamLevel: '3.5',
+  assessmentTs: '2025-09-28T15:30:00',
+  matNeeds: 'SuboxoneContinue',
+  commitmentStatus: '302Required',
+  acuity: 'StepUp',
+  placementNeeded: 'Y',
+  assessmentType: 'Current Session',
+  notes: 'Test assessment for persistence loading'
+}
+❌ Assessment save failed, using fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Fetching assessments for patient: pt_501
+❌ Database query failed, checking fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Fetching assessments for patient: pt_501
+❌ Database query failed, checking fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Fetching assessments for patient: pt_501
+❌ Database query failed, checking fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Saving assessment data: {
+  asamLevel: '3.7WM',
+  assessmentTs: '',
+  matNeeds: 'MethadoneContinue',
+  commitmentStatus: '201Hold',
+  acuity: 'Medically Monitored',
+  placementNeeded: 'Y',
+  savedBy: 'UI User',
+  savedAt: '2025-09-28T20:03:25.224Z',
+  patientId: 'pt_501',
+  id: 'mg44ngkol1uh4f3',
+  lastSaved: '2025-09-28T20:03:25.224Z'
+}
+❌ Assessment save failed, using fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Fetching assessments for patient: pt_501
+❌ Database query failed, checking fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Saving assessment data: {
+  asamLevel: '3.7WM',
+  assessmentTs: '',
+  matNeeds: 'MethadoneContinue',
+  commitmentStatus: 'None',
+  acuity: 'Medically Monitored',
+  placementNeeded: 'Y',
+  savedBy: 'UI User',
+  savedAt: '2025-09-28T20:03:31.727Z',
+  patientId: 'pt_501',
+  id: 'mg44nllb9ohu90i',
+  lastSaved: '2025-09-28T20:03:31.728Z'
+}
+❌ Assessment save failed, using fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption
+📝 Saving assessment data: {
+  asamLevel: '3.7WM',
+  assessmentTs: '',
+  matNeeds: 'MethadoneContinue',
+  commitmentStatus: 'None',
+  acuity: 'Medically Monitored',
+  placementNeeded: 'Y',
+  savedBy: 'UI User',
+  savedAt: '2025-09-28T20:03:34.268Z',
+  patientId: 'pt_501',
+  id: 'mg44nnjwfkv96dq',
+  lastSaved: '2025-09-28T20:03:34.268Z'
+}
+❌ Assessment save failed, using fallback: no pg_hba.conf entry for host "100.94.125.38", user "emr_admin", database "emr_crc_ssot", no encryption

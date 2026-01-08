@@ -1,0 +1,7 @@
+{
+  "tools": [
+    "search_docs",
+    "summarize"
+  ],
+  "_comment": "This whitelist reduces tool confusion and improves model reliability. Add tools as needed and run 'npm run gen:bindings' to regenerate."
+}

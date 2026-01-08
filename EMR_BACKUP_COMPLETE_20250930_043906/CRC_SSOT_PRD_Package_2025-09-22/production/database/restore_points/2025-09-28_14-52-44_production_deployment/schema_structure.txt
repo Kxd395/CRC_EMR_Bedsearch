@@ -1,0 +1,57 @@
+         table_name          |     column_name     |        data_type         
+-----------------------------+---------------------+--------------------------
+ audit_log                   | audit_id            | uuid
+ audit_log                   | table_name          | text
+ audit_log                   | operation           | text
+ audit_log                   | old_values          | jsonb
+ audit_log                   | new_values          | jsonb
+ audit_log                   | user_id             | uuid
+ audit_log                   | user_ip             | inet
+ audit_log                   | created_at          | timestamp with time zone
+ facilities                  | facility_id         | uuid
+ facilities                  | name                | text
+ facilities                  | city                | text
+ facilities                  | state               | text
+ facilities                  | phone               | text
+ facilities                  | accepts_302         | boolean
+ facilities                  | accepts_mat         | boolean
+ facilities                  | accepts_secure      | boolean
+ facilities                  | metadata            | jsonb
+ facilities                  | created_at          | timestamp with time zone
+ facilities                  | updated_at          | timestamp with time zone
+ patients                    | patient_id          | uuid
+ patients                    | mrn                 | text
+ patients                    | first_name          | text
+ patients                    | last_name           | text
+ patients                    | date_of_birth       | date
+ patients                    | created_at          | timestamp with time zone
+ patients                    | updated_at          | timestamp with time zone
+ placement_notes             | note_id             | uuid
+ placement_notes             | placement_search_id | uuid
+ placement_notes             | author_id           | uuid
+ placement_notes             | body                | text
+ placement_notes             | metadata            | jsonb
+ placement_notes             | created_at          | timestamp with time zone
+ placement_search            | placement_search_id | uuid
+ placement_search            | patient_id          | uuid
+ placement_search            | facility_id         | uuid
+ placement_search            | facility_name       | text
+ placement_search            | status              | USER-DEFINED
+ placement_search            | is_accepting        | boolean
+ placement_search            | is_transfer_set     | boolean
+ placement_search            | is_open             | boolean
+ placement_search            | search_origin       | text
+ placement_search            | notes_summary       | text
+ placement_search            | created_by          | uuid
+ placement_search            | last_updated_at     | timestamp with time zone
+ placement_search            | created_at          | timestamp with time zone
+ v_active_placement_searches | placement_search_id | uuid
+ v_active_placement_searches | patient_id          | uuid
+ v_active_placement_searches | facility_id         | uuid
+ v_active_placement_searches | facility_name       | text
+ v_active_placement_searches | status              | USER-DEFINED
+ v_active_placement_searches | is_accepting        | boolean
+ v_active_placement_searches | is_transfer_set     | boolean
+ v_active_placement_searches | last_updated_at     | timestamp with time zone
+(53 rows)
+
